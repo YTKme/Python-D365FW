@@ -128,8 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#################
-# Miscellaneous #
-#################
+# Configuration
+.vscode/settings.json
 
+# Test Data
+D365API/TestData.json
+
+# Miscellaneous
 .DS_Store
