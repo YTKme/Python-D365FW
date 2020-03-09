@@ -11,8 +11,9 @@ from D365API.Access import Access
 class TestAccess(unittest.TestCase):
     """Test the Access module."""
 
-    def setUp(self):
-        """Prepare test fixture.
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test class.
 
         Get the data from JSON (JavaScript Object Notation) file.
         """
@@ -24,10 +25,10 @@ class TestAccess(unittest.TestCase):
 
         # Open the file for reading
         with open(test_access_file, "r") as f:
-            self._data = json.load(f)
+            cls._data = json.load(f)
 
         # Get the hostname
-        self._hostname = self._data["organizations"]["name"]
+        cls._hostname = cls._data["organizations"]["name"]
 
 
     def test_login_rest_v1_failure(self):
