@@ -15,7 +15,7 @@ class TestAccess(unittest.TestCase):
     def setUpClass(cls):
         """Prepare test class.
 
-        Get the data from JSON (JavaScript Object Notation) file.
+        Get the Test Data from JSON (JavaScript Object Notation) file.
         """
 
         # Get the current directory of the file
@@ -35,8 +35,8 @@ class TestAccess(unittest.TestCase):
         """Test a failure of REST (REpresentational State Transfer) login method.
 
         Get the failure username and password (user_rest_failure) from the
-        TestAccess.json file and login. Should result in login method returning
-        None value.
+        Test Data file and login. Should result in login method returning None
+        value.
         """
 
         # Get the user data for success login
@@ -56,8 +56,8 @@ class TestAccess(unittest.TestCase):
         """Test a success of REST (REpresentational State Transfer) login method.
 
         Get the success username and password (user_rest_v1_success) from the
-        TestAccess.json file and login. Should result in login method returning
-        an access token.
+        Test Data file and login. Should result in login method returning an
+        access token.
         """
 
         # Get the user data for success login
