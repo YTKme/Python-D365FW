@@ -7,6 +7,7 @@ from D365API.Rest import Rest
 from D365API.Constant import HTTP_GET
 from D365API.Constant import HTTP_POST
 from D365API.Constant import HTTP_PATCH
+from D365API.Constant import HTTP_DELETE
 
 class Entity(Rest):
     """Entity.
@@ -65,7 +66,7 @@ class Entity(Rest):
             id (str): The unique identifier (ID) of the entity.
 
         Returns:
-            A
+            A string formatted JSON for the request
         """
 
         # Create the relative (request) URL
@@ -109,8 +110,23 @@ class Entity(Rest):
         return None
 
 
-    def delete(self):
+    def delete(self, id):
         """Delete Entity.
+
+        Args:
+            id (str): The unique identifier (ID) of the entity.
         """
 
-        print("Delete " + self._label)
+        # Create the relative (request) URL
+        relative_url = "/{name}({id})".format(name=self._label, id=id)
+
+        # Send the request
+        r = self.send(HTTP_DELETE, relative_url, None)
+
+        # Check the status code
+        if r.status_code == 204:
+            # Return the status code
+            return r.status_code
+
+        # There was an error
+        return None
