@@ -11,43 +11,103 @@ import unittest
 from D365API.Access import Access
 from D365API.Entity import Entity
 
-class TestAccount(unittest.TestCase):
-    """Test the Entity module with Account."""
+def setUpModule():
+    """Set Up Module"""
+    pass
 
+
+def tearDownModule():
+    """Tear Down Module"""
+    pass
+
+
+class TestAccountCreate(unittest.TestCase):
+    """Test the Entity module with Create Account."""
+    
     @classmethod
     def setUpClass(cls):
-        """Prepare test class.
+        """Prepare test set up class.
 
-        Get the data from JSON (JavaScript Object Notation) file and login.
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
         """
 
         # Get the current directory of the file
-        cls._current_directory = os.path.dirname(os.path.abspath(__file__))
-        # Get the path of the test data file
-        cls._test_data_file = os.path.join(cls._current_directory, "TestData.json")
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, "TestData.json")
 
         # Open the file for reading
-        with open(cls._test_data_file, "r") as f:
-            cls._data = json.load(f)
+        with open(cls.test_data_file, "r") as f:
+            cls.data = json.load(f)
 
-        # Get the hostname
-        cls._hostname = cls._data["organizations"]["name"]
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data["organizations"]["name"]
 
         # Get the user data for success login
-        user_rest_v1_success = cls._data["systemusers"]["user_rest_v1_success"]
+        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
 
         # Create an instance of Access object and login
-        cls._access = Access(hostname=cls._hostname,
-                             client_id=user_rest_v1_success["client_id"],
-                             client_secret=user_rest_v1_success["client_secret"],
-                             tenant_id=user_rest_v1_success["tenant_id"]).login()
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=user_rest_v1_success["client_id"],
+                            client_secret=user_rest_v1_success["client_secret"],
+                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+
+    def test_create_account_random_failure(self):
+        """Test a random failure for create Account.
+
+        Get the hostname from the Test Data and the generated a random
+        Account field to make a request for create. Should result in
+        response with status code 400 Bad Request.
+        """
+        
+        # Create the payload
+        payload = {
+            # Generate a random Account field
+            "random": "Random-{}".format(random.randrange(10000, 99999))
+        }
+
+        # Make a request to create the Account with random field
+        # Create the Account with the newly generated Account field
+        create_account_id = self.entity.accounts.create(json.dumps(payload))
+
+        # Test to ensure Account information is None
+        self.assertIsNone(create_account_id)
+
+
+    @unittest.expectedFailure
+    def test_create_account_description_failure(self):
+        """Test a description failure for create Account.
+
+        Get the hostname from the Test Data and the generated a random
+        Account Description to make a request for create. Should result
+        in response with status code 400 Bad Request.
+        """
+        
+        # Create the payload
+        payload = {
+            # Generate a random Account description
+            "description": "Description-{}".format(random.randrange(10000, 99999))
+        }
+
+        # Make a request to create the Account with random description
+        # Create the Account with the newly generated Account description
+        create_account_id = self.entity.accounts.create(json.dumps(payload))
+
+        # Test to ensure Account information is None
+        self.assertIsNone(create_account_id)
 
 
     def test_create_account_success(self):
-        """Test a success of create Account.
+        """Test a success for create Account.
 
-        Get the hostname from the Test Data and the generated Account Name to
-        make a request. Should result in response with status code 204 No Content.
+        Get the hostname from the Test Data and the generated Account
+        Name to make a request for create. Should result in response
+        with status code 204 No Content.
         """
 
         # Create the payload
@@ -56,61 +116,409 @@ class TestAccount(unittest.TestCase):
             "name": "Account-{}".format(random.randrange(10000, 99999))
         }
 
-        # Create an instance of Entity object
-        entity = Entity(self._access, self._hostname)
+        # Make a request to create the Account
+        # Get the return unique identifier (ID)
+        # The payload need to be serialized to JSON formatted str (json.dumps)
+        create_account_id = self.entity.accounts.create(json.dumps(payload))
+
+        # Create the dictionary
+        self.data["accounts"]["create_account_success"] = {}
+        # Create or update the Account ID in the Test Data
+        self.data["accounts"]["create_account_success"]["id"] = create_account_id
+
+        # Write the new Test Data to file
+        with open(self.test_data_file, "w") as f:
+            json.dump(self.data, f)
+
+        # Test to ensure Account ID is a string
+        self.assertEqual(type(create_account_id), str)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+
+        # Get the create Account success unique identifier (ID)
+        create_account_id = cls.data["accounts"]["create_account_success"]["id"]
+        # Make a request to delete the Account
+        create_account = cls.entity.accounts.delete(create_account_id)
+        # Check if the delete was successful
+        if create_account == 204:
+            # Delete the Account entry from the Test Data
+            if "create_account_success" in cls.data["accounts"]:
+                del cls.data["accounts"]["create_account_success"]
+
+        # Write the new Test Data to file
+        with open(cls.test_data_file, "w") as f:
+            json.dump(cls.data, f)
+
+
+class TestAccountRead(unittest.TestCase):
+    """Test the Entity module with Read Account."""
+    
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test set up class.
+
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
+        """
+
+        # Get the current directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+
+        # Open the file for reading
+        with open(cls.test_data_file, "r") as f:
+            cls.data = json.load(f)
+
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data["organizations"]["name"]
+
+        # Get the user data for success login
+        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+
+        # Create an instance of Access object and login
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=user_rest_v1_success["client_id"],
+                            client_secret=user_rest_v1_success["client_secret"],
+                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+        # Create the payload
+        payload = {
+            # Generate a random Account Name
+            "name": "Account-{}".format(random.randrange(10000, 99999))
+        }
 
         # Make a request to create the Account
         # Get the return unique identifier (ID)
         # The payload need to be serialized to JSON formatted str (json.dumps)
-        account_id = entity.accounts.create(json.dumps(payload))
+        account_id = cls.entity.accounts.create(json.dumps(payload))
 
-        # Test to ensure Account ID is a string
-        self.assertEqual(type(account_id), str)
+        # Create the dictionary
+        cls.data["accounts"]["read_account_success"] = {}
+        # Create or update the Account ID in the Test Data
+        cls.data["accounts"]["read_account_success"]["id"] = account_id
 
-        # Create or update the Account ID in the test data
-        self._data["accounts"]["read_account_success"]["id"] = account_id
-
-        # Write the new test data to file
-        with open(self._test_data_file, "w") as f:
-            json.dump(self._data, f)
-
-
-    def test_read_account_success(self):
-        """Test a success of read Account.
-
-        Get the hostname from the Test Data to make a request. Should result in
-        reponse with status code 200 OK.
-        """
-
-        # Create an instance of Entity object
-        entity = Entity(self._access, self._hostname)
-
-        # Make a request to read the Account
-        account = entity.accounts.read()
-
-        # Test to ensure Account information is a string
-        self.assertEqual(type(account), str)
+        # Write the new Test Data to file
+        with open(cls.test_data_file, "w") as f:
+            json.dump(cls.data, f)
 
 
     def test_read_account_failure(self):
         """Test a failure of read Account.
 
-        Get the hostname from the Test Data to make a request. Should result in
-        reponse with None.
+        Get the hostname from the Test Data to make a request for read.
+        Should result in response with None.
         """
 
-        # Create an instance of Entity object
-        entity = Entity(self._access, self._hostname)
-
-        # Get the read Account failure data
-        read_account_failure = self._data["accounts"]["read_account_failure"]
+        # Get the read Account failure unique identifier (ID)
+        read_account_id = self.data["accounts"]["read_account_failure"]["id"]
 
         # Make a request to read the Account with unique identifier (ID)
-        account = entity.accounts.read(read_account_failure["id"])
+        account = self.entity.accounts.read(read_account_id)
 
-        # Test to ensure Account information is None
-        self.assertEqual(account, None)
+        # Test to ensure read Account information is None
+        self.assertIsNone(account)
+
+
+    def test_read_account_success(self):
+        """Test a success for read Account.
+
+        Get the hostname from the Test Data to make a request for read.
+        Should result in response with status code 200 OK.
+        """
+
+        # Get the Account unique identifier (ID) from Test Data
+        read_account_id = self.data["accounts"]["read_account_success"]["id"]
+
+        # Make a request to read the Account
+        read_account = self.entity.accounts.read(read_account_id)
+
+        # Test to ensure Account information is a string
+        self.assertEqual(type(read_account), str)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+
+        # Get the read Account success unique identifier (ID)
+        read_account_id = cls.data["accounts"]["read_account_success"]["id"]
+        # Make a request to delete the Account
+        read_account = cls.entity.accounts.delete(read_account_id)
+        # Check if the delete was successful
+        if read_account == 204:
+            # Delete the Account entry from the Test Data
+            if "read_account_success" in cls.data["accounts"]:
+                del cls.data["accounts"]["read_account_success"]
+
+        # Write the new Test Data to file
+        with open(cls.test_data_file, "w") as f:
+            json.dump(cls.data, f)
+
+
+class TestAccountUpdate(unittest.TestCase):
+    """Test the Entity module with Update Account."""
+    
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test set up class.
+
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
+        """
+
+        # Get the current directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+
+        # Open the file for reading
+        with open(cls.test_data_file, "r") as f:
+            cls.data = json.load(f)
+
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data["organizations"]["name"]
+
+        # Get the user data for success login
+        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+
+        # Create an instance of Access object and login
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=user_rest_v1_success["client_id"],
+                            client_secret=user_rest_v1_success["client_secret"],
+                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+        # Create the payload
+        payload = {
+            # Generate a random Account Name
+            "name": "Account-{}".format(random.randrange(10000, 99999))
+        }
+
+        # Make a request to create the Account
+        # Get the return unique identifier (ID)
+        # The payload need to be serialized to JSON formatted str (json.dumps)
+        account_id = cls.entity.accounts.create(json.dumps(payload))
+
+        # Create the dictionary
+        cls.data["accounts"]["update_account_success"] = {}
+        # Create or update the Account ID in the Test Data
+        cls.data["accounts"]["update_account_success"]["id"] = account_id
+
+        # Write the new Test Data to file
+        with open(cls.test_data_file, "w") as f:
+            json.dump(cls.data, f)
+
+
+    def test_update_account_failure(self):
+        """Test a failure for update Account.
+
+        Get the hostname from the Test Data and generate an incorrect
+        Account Name to make a request for update. Should result in
+        response with status code.
+        """
+
+        # Get the read Account failure unique identifier (ID)
+        update_account_id = self.data["accounts"]["update_account_failure"]["id"]
+
+        # Create the payload
+        payload = {
+            # Generate a random Account Name
+            "name": "Account-{}".format(random.randrange(10000, 99999))
+        }
+
+        # Make a request to update the Account with the incorrect unique identifier (ID)
+        # Update the Account Name with the newly generated Account Name
+        update_account = self.entity.accounts.update(update_account_id, json.dumps(payload))
+
+        # Test to ensure HTTP status code is not 204 No Content
+        self.assertNotEqual(update_account, 204)
+
+
+    def test_update_account_success(self):
+        """Test a success for update Account.
+
+        Get the hostname from the Test Data and the generated a new
+        Account Name to make a request for update. Should result in
+        response with status code 204 No Content.
+        """
+
+        # Get the read Account success data
+        update_account_id = self.data["accounts"]["update_account_success"]["id"]
+
+        # Create the payload
+        payload = {
+            # Generate a random Account Name
+            "name": "Account-{}".format(random.randrange(10000, 99999))
+        }
+
+        # Make a request to update the Account with unique identifier (ID)
+        # Update the Account Name with the newly generated Account Name
+        update_account = self.entity.accounts.update(update_account_id, json.dumps(payload))
+
+        # Test to ensure HTTP status code is 204 No Content
+        self.assertEqual(update_account, 204)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+
+        # Get the read Account success unique identifier (ID)
+        update_account_id = cls.data["accounts"]["update_account_success"]["id"]
+        # Make a request to delete the Account
+        update_account = cls.entity.accounts.delete(update_account_id)
+        # Check if the delete was successful
+        if update_account == 204:
+            # Delete the Account entry from the Test Data
+            if "update_account_success" in cls.data["accounts"]:
+                del cls.data["accounts"]["update_account_success"]
+
+        # Write the new Test Data to file
+        with open(cls.test_data_file, "w") as f:
+            json.dump(cls.data, f)
+
+
+class TestAccountDelete(unittest.TestCase):
+    """Test the Entity module with Delete Account."""
+    
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test set up class.
+
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
+        """
+
+        # Get the current directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+
+        # Open the file for reading
+        with open(cls.test_data_file, "r") as f:
+            cls.data = json.load(f)
+
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data["organizations"]["name"]
+
+        # Get the user data for success login
+        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+
+        # Create an instance of Access object and login
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=user_rest_v1_success["client_id"],
+                            client_secret=user_rest_v1_success["client_secret"],
+                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+        # Create the payload
+        payload = {
+            # Generate a random Account Name
+            "name": "Account-{}".format(random.randrange(10000, 99999))
+        }
+
+        # Make a request to create the Account
+        # Get the return unique identifier (ID)
+        # The payload need to be serialized to JSON formatted str (json.dumps)
+        account_id = cls.entity.accounts.create(json.dumps(payload))
+
+        # Create the dictionary
+        cls.data["accounts"]["delete_account_success"] = {}
+        # Create or update the Account ID in the Test Data
+        cls.data["accounts"]["delete_account_success"]["id"] = account_id
+
+        # Write the new Test Data to file
+        with open(cls.test_data_file, "w") as f:
+            json.dump(cls.data, f)
+
+
+    def test_delete_account_failure(self):
+        """Test a failure for delete Account.
+        """
+
+        # Get the delete Account failure unique identifier (ID)
+        delete_account_id = self.data["accounts"]["delete_account_failure"]["id"]
+
+        # Make a request to delete the Account with unique identifier (ID)
+        # Delete the Account
+        delete_account = self.entity.accounts.delete(delete_account_id)
+
+        # Test to ensure delete Account information is None
+        self.assertIsNone(delete_account)
+
+
+    def test_delete_account_success(self):
+        """Test a success for delete Account.
+
+        Get the hostname and the unique identifier (ID) from the Test Data to
+        make a request for delete. Should result in response with status code
+        204 No Content.
+        """
+
+        # Get the delete Account success unique identifier (ID)
+        delete_account_id = self.data["accounts"]["delete_account_success"]["id"]
+
+        # Make a request to delete the Account with unique identifier (ID)
+        # Delete the Account
+        delete_account = self.entity.accounts.delete(delete_account_id)
+
+        # Delete the Account entry from the Test Data
+        if "delete_account_success" in self.data["accounts"]:
+            del self.data["accounts"]["delete_account_success"]
+
+        # Write the new Test Data to file
+        with open(self.test_data_file, "w") as f:
+            json.dump(self.data, f)
+
+        # Test to ensure HTTP status code is 204 No Content
+        self.assertEqual(delete_account, 204)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+        pass
+
+
+def suite():
+    """Test Suite"""
+
+    # Create the Unit Test Suite
+    suite = unittest.TestSuite()
+
+    # Add the Unit Test
+    suite.addTest(TestAccountCreate())
+    suite.addTest(TestAccountRead())
+    suite.addTest(TestAccountUpdate())
+    suite.addTest(TestAccountDelete())
+
+    # Return the Test Suite
+    return suite
 
 
 if __name__ == "__main__":
-    unittest.main()
+    runner = unittest.TextTestRunner()
+    runner.run(suite())
