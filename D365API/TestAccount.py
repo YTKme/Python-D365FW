@@ -233,7 +233,8 @@ class TestAccountRead(unittest.TestCase):
         """Test a success for read Account.
 
         Get the hostname from the Test Data to make a request for read.
-        Should result in response with status code 200 OK.
+        Should result in response with status code 200 OK and a string
+        formatted JSON for the result of the read.
         """
 
         # Get the Account unique identifier (ID) from Test Data
@@ -503,6 +504,62 @@ class TestAccountDelete(unittest.TestCase):
         pass
 
 
+class TestAccountQuery(unittest.TestCase):
+    """Test the Entity module with Query Account."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test set up class.
+
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
+        """
+
+        # Get the current directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+
+        # Open the file for reading
+        with open(cls.test_data_file, "r") as f:
+            cls.data = json.load(f)
+
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data["organizations"]["name"]
+
+        # Get the user data for success login
+        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+
+        # Create an instance of Access object and login
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=user_rest_v1_success["client_id"],
+                            client_secret=user_rest_v1_success["client_secret"],
+                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+
+    def test_query_account_success(self):
+        """Test a success for query Account.
+
+        Get the hostname from the Test Data to make a request for query.
+        Should result in response with status code 200 OK and a string
+        formatted JSON for the result of the query.
+        """
+
+        # Define the query property
+        query = {
+            "select": "accountid,name"
+        }
+
+        # Make a request to query the Account
+        query_account = self.entity.accounts.query(**query)
+
+        # Test to ensure Account information is a string
+        self.assertEqual(type(query_account), str)
+
+
 def suite():
     """Test Suite"""
 
@@ -514,6 +571,7 @@ def suite():
     suite.addTest(TestAccountRead())
     suite.addTest(TestAccountUpdate())
     suite.addTest(TestAccountDelete())
+    suite.addTest(TestAccountQuery())
 
     # Return the Test Suite
     return suite

@@ -66,7 +66,7 @@ class Entity(Rest):
             id (str): The unique identifier (ID) of the entity.
 
         Returns:
-            A string formatted JSON for the request
+            A string formatted JSON for the read request
         """
 
         # Create the relative (request) URL
@@ -93,6 +93,9 @@ class Entity(Rest):
         Args:
             id (str): The unique identifier (ID) of the entity.
             payload (dict): The payload (message body) passed in.
+
+        Returns:
+            An integer for the status code of the update request.
         """
 
         # Create the relative (request) URL
@@ -115,6 +118,9 @@ class Entity(Rest):
 
         Args:
             id (str): The unique identifier (ID) of the entity.
+
+        Returns:
+            An integer for the status code of the delete request.
         """
 
         # Create the relative (request) URL
@@ -127,6 +133,44 @@ class Entity(Rest):
         if r.status_code == 204:
             # Return the status code
             return r.status_code
+
+        # There was an error
+        return None
+
+
+    def query(self, **kwargs):
+        """Query Entity.
+
+        .. _Query Data using the Web API:
+        https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/webapi/query-data-web-api
+
+        .. _Web API Query Data Sample:
+        https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/webapi/web-api-query-data-sample
+
+        Args:
+            kwargs (dict): The keyword arguments for the query.
+
+        Returns:
+            A string formatted JSON for the result of the query.
+        """
+        
+        # Build the query
+        query = ""
+
+        # If the `select` system query option is specified
+        if kwargs["select"]:
+            query += "$select={}".format(kwargs["select"])
+
+        # Create the relative (request) URL
+        relative_url = "/{name}?{query}".format(name=self._label, query=query)
+
+        # Send the request
+        r = self.send(HTTP_GET, relative_url, None)
+
+        # Check the status code
+        if r.status_code == 200:
+            # Return the response text (message body)
+            return r.text
 
         # There was an error
         return None
