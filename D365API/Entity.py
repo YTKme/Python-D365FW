@@ -158,8 +158,11 @@ class Entity(Rest):
         query = ""
 
         # If the `select` system query option is specified
-        if kwargs["select"]:
+        if "select" in kwargs:
             query += "$select={}".format(kwargs["select"])
+        # If the `top` system query option is specified
+        if "top" in kwargs:
+            query += "$top={}".format(kwargs["top"])
 
         # Create the relative (request) URL
         relative_url = "/{name}?{query}".format(name=self._label, query=query)

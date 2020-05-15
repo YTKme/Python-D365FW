@@ -540,12 +540,13 @@ class TestAccountQuery(unittest.TestCase):
         cls.entity = Entity(cls.access, cls.hostname)
 
 
-    def test_query_account_success(self):
+    def test_query_select_account_success(self):
         """Test a success for query Account.
 
         Get the hostname from the Test Data to make a request for query.
-        Should result in response with status code 200 OK and a string
-        formatted JSON for the result of the query.
+        Test for the `select` system query option. Should result in
+        response with status code 200 OK and a string formatted JSON for
+        the result of the query.
         """
 
         # Define the query property
@@ -558,6 +559,33 @@ class TestAccountQuery(unittest.TestCase):
 
         # Test to ensure Account information is a string
         self.assertEqual(type(query_account), str)
+
+
+    def test_query_top_account_success(self):
+        """Test a success for query Account.
+
+        Get the hostname from the Test Data to make a request for query.
+        Test for the `top` system query option. Should result in
+        response with status code 200 OK and a string formatted JSON for
+        the result of the query.
+        """
+
+        # Set the `top` system query option count
+        top_count = 3
+        
+        # Define the query property
+        query = {
+            "top": top_count
+        }
+
+        # Make a request to query the Account
+        query_account = self.entity.accounts.query(**query)
+
+        # Count the number of result
+        query_account_count = len(json.loads(query_account)["value"])
+
+        # Test to ensure the `top` count is the same as the result count
+        self.assertEqual(top_count, query_account_count)
 
 
 def suite():
