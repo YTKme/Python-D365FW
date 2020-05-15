@@ -57,8 +57,8 @@ class TestAccountCreate(unittest.TestCase):
         cls.entity = Entity(cls.access, cls.hostname)
 
 
-    def test_create_account_random_failure(self):
-        """Test a random failure for create Account.
+    def test_account_create_random_failure(self):
+        """Test a random failure for Account create.
 
         Get the hostname from the Test Data and the generated a random
         Account field to make a request for create. Should result in
@@ -80,8 +80,8 @@ class TestAccountCreate(unittest.TestCase):
 
 
     @unittest.expectedFailure
-    def test_create_account_description_failure(self):
-        """Test a description failure for create Account.
+    def test_account_create_description_failure(self):
+        """Test a description failure for Account create.
 
         Get the hostname from the Test Data and the generated a random
         Account Description to make a request for create. Should result
@@ -102,8 +102,8 @@ class TestAccountCreate(unittest.TestCase):
         self.assertIsNone(create_account_id)
 
 
-    def test_create_account_success(self):
-        """Test a success for create Account.
+    def test_account_create_success(self):
+        """Test a success for Account create.
 
         Get the hostname from the Test Data and the generated Account
         Name to make a request for create. Should result in response
@@ -212,8 +212,8 @@ class TestAccountRead(unittest.TestCase):
             json.dump(cls.data, f)
 
 
-    def test_read_account_failure(self):
-        """Test a failure of read Account.
+    def test_account_read_failure(self):
+        """Test a failure of Account read.
 
         Get the hostname from the Test Data to make a request for read.
         Should result in response with None.
@@ -229,8 +229,8 @@ class TestAccountRead(unittest.TestCase):
         self.assertIsNone(account)
 
 
-    def test_read_account_success(self):
-        """Test a success for read Account.
+    def test_account_read_success(self):
+        """Test a success for Account read.
 
         Get the hostname from the Test Data to make a request for read.
         Should result in response with status code 200 OK and a string
@@ -325,12 +325,12 @@ class TestAccountUpdate(unittest.TestCase):
             json.dump(cls.data, f)
 
 
-    def test_update_account_failure(self):
-        """Test a failure for update Account.
+    def test_account_update_failure(self):
+        """Test a failure for Account update.
 
         Get the hostname from the Test Data and generate an incorrect
         Account Name to make a request for update. Should result in
-        response with status code.
+        response with None.
         """
 
         # Get the read Account failure unique identifier (ID)
@@ -346,12 +346,12 @@ class TestAccountUpdate(unittest.TestCase):
         # Update the Account Name with the newly generated Account Name
         update_account = self.entity.accounts.update(update_account_id, json.dumps(payload))
 
-        # Test to ensure HTTP status code is not 204 No Content
-        self.assertNotEqual(update_account, 204)
+        # Test to ensure update Account information is None
+        self.assertIsNone(update_account)
 
 
-    def test_update_account_success(self):
-        """Test a success for update Account.
+    def test_account_update_success(self):
+        """Test a success for Account update.
 
         Get the hostname from the Test Data and the generated a new
         Account Name to make a request for update. Should result in
@@ -453,8 +453,12 @@ class TestAccountDelete(unittest.TestCase):
             json.dump(cls.data, f)
 
 
-    def test_delete_account_failure(self):
-        """Test a failure for delete Account.
+    def test_account_delete_failure(self):
+        """Test a failure for Account delete.
+
+        Get the hostname and the unique identifier (ID) from the Test
+        Data to make a request for delete. Should result in response
+        with None.
         """
 
         # Get the delete Account failure unique identifier (ID)
@@ -468,12 +472,12 @@ class TestAccountDelete(unittest.TestCase):
         self.assertIsNone(delete_account)
 
 
-    def test_delete_account_success(self):
-        """Test a success for delete Account.
+    def test_account_delete_success(self):
+        """Test a success for Account delete.
 
-        Get the hostname and the unique identifier (ID) from the Test Data to
-        make a request for delete. Should result in response with status code
-        204 No Content.
+        Get the hostname and the unique identifier (ID) from the Test
+        Data to make a request for delete. Should result in response
+        with status code 204 No Content.
         """
 
         # Get the delete Account success unique identifier (ID)
@@ -540,8 +544,8 @@ class TestAccountQuery(unittest.TestCase):
         cls.entity = Entity(cls.access, cls.hostname)
 
 
-    def test_query_select_account_success(self):
-        """Test a success for query Account.
+    def test_account_query_select_success(self):
+        """Test a success for Account query `select`.
 
         Get the hostname from the Test Data to make a request for query.
         Test for the `select` system query option. Should result in
@@ -561,8 +565,8 @@ class TestAccountQuery(unittest.TestCase):
         self.assertEqual(type(query_account), str)
 
 
-    def test_query_top_account_success(self):
-        """Test a success for query Account.
+    def test_account_query_top_success(self):
+        """Test a success for Account query `top`.
 
         Get the hostname from the Test Data to make a request for query.
         Test for the `top` system query option. Should result in
