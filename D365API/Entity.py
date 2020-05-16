@@ -3,6 +3,9 @@ D365API.Entity
 ~~~~~~~~~~~~~~
 """
 
+import json
+from urllib.parse import urlparse
+
 from D365API.Rest import Rest
 from D365API.Constant import HTTP_GET
 from D365API.Constant import HTTP_POST
@@ -42,7 +45,7 @@ class Entity(Rest):
         # Create the relative (request) URL
         relative_url = "/{name}".format(name=self._label)
 
-        # Send the request
+        # Send the request for a response
         r = self.send(HTTP_POST, relative_url, payload)
 
         # Check the status code
@@ -69,22 +72,45 @@ class Entity(Rest):
             A string formatted JSON for the read request
         """
 
+        # Create a read result list to store all the read result
+        read_result_list = []
+
         # Create the relative (request) URL
         if id is not None:
             relative_url = "/{name}({id})".format(name=self._label, id=id)
         else:
             relative_url = "/{name}".format(name=self._label)
 
-        # Send the request
+        # Send the request for a response
         r = self.send(HTTP_GET, relative_url, None)
+
+        # Parse the read result
+        read_result = json.loads(r.text)
 
         # Check the status code
         if r.status_code == 200:
-            # Return the response text (message body)
-            return r.text
+            # Add the `value` to read result list
+            read_result_list.extend(read_result["value"])
 
-        # There was an error
-        return None
+        # Check if there are more result
+        while "@odata.nextLink" in read_result:
+            # If there are more result
+            # Parse the `nextLink` URL
+            u = urlparse(read_result["@odata.nextLink"])
+            # Rebuild the relative URL using the path and query
+            relative_url = u.path + u.query
+            # Send the request for a response
+            r = self.send(HTTP_GET, relative_url, None)
+
+            # Check the status code
+            if r.status_code == 200:
+                # Parse the read result
+                read_result = json.loads(r.text)
+                # Add the `value` to read result list
+                read_result_list.append(read_result["value"])
+
+        # Return all the read result
+        return read_result_list
 
 
     def update(self, id, payload):
@@ -101,7 +127,7 @@ class Entity(Rest):
         # Create the relative (request) URL
         relative_url = "/{name}({id})".format(name=self._label, id=id)
 
-        # Send the request
+        # Send the request for a response
         r = self.send(HTTP_PATCH, relative_url, payload)
 
         # Check the status code
@@ -126,7 +152,7 @@ class Entity(Rest):
         # Create the relative (request) URL
         relative_url = "/{name}({id})".format(name=self._label, id=id)
 
-        # Send the request
+        # Send the request for a response
         r = self.send(HTTP_DELETE, relative_url, None)
 
         # Check the status code
@@ -167,7 +193,7 @@ class Entity(Rest):
         # Create the relative (request) URL
         relative_url = "/{name}?{query}".format(name=self._label, query=query)
 
-        # Send the request
+        # Send the request for a response
         r = self.send(HTTP_GET, relative_url, None)
 
         # Check the status code

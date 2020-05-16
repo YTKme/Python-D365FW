@@ -10,6 +10,7 @@ import unittest
 
 from D365API.Access import Access
 from D365API.Entity import Entity
+from D365API.Constant import HTTP_GET
 
 def setUpModule():
     """Set Up Module"""
@@ -245,6 +246,27 @@ class TestAccountRead(unittest.TestCase):
 
         # Test to ensure Account information is a string
         self.assertEqual(type(read_account), str)
+
+
+    def test_account_read_count_success(self):
+        """Test a success for Account read count.
+
+        Get the hostname from the Test Data to make a request for read.
+        Should result in response with a list, the count of the read
+        result list should be 1 greater than the count of the function
+        call. This is due to Account create from `setUpClass`.
+        """
+
+        # Get the Account count using the `RetrieveTotalRecordCount` function
+        account_count_result = self.entity.send(HTTP_GET, "RetrieveTotalRecordCount(EntityNames=['account'])", None)
+        # Parse the Account count result
+        account_count = json.loads(account_count_result.text)["EntityRecordCountCollection"]["Values"][0]
+
+        # Make a request to read the Account
+        read_account = self.entity.accounts.read()
+
+        # Test to ensure Account count (+ 1) is the same as Account read
+        self.assertEqual(account_count + 1, len(read_account))
 
 
     @classmethod
