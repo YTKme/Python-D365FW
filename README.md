@@ -2,6 +2,7 @@
 Python Microsoft Dynamic 365 Application Programming Interface
 
 [![Python Version](https://img.shields.io/badge/python-3.7-blue.svg)][python-version]
+
 [python-version]: https://www.python.org/
 
 A basic Python REST API client built for Python 3.0+.
