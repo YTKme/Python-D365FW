@@ -164,6 +164,17 @@ class Entity(Rest):
         return None
 
 
+    def associate(self, src, dest):
+        """Associate Entity.
+
+        Args:
+            src (str): The source unique identifier (ID) of the entity.
+            dest (str): The destination unique identifier (ID) of the
+                entity.
+        """
+        pass
+
+
     def query(self, **kwargs):
         """Query Entity.
 
