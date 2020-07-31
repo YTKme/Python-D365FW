@@ -47,8 +47,8 @@ class Rest(object):
 
         Args:
             method (str): The HTTP method for the request.
-            relative_url (str): The relative URL for the HTTP request, with or
-                without the beginning slash ( / ).
+            relative_url (str): The relative URL for the HTTP request,
+                with or without the beginning slash ( / ).
                 Example: /api/data/v9.1/ or /accounts
             payload (dict): The body of the HTTP request.
 
