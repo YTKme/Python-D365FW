@@ -1,0 +1,9 @@
+{
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./D365API/Test",
+        "-p",
+        "*Test*.py"
+    ]
+}
