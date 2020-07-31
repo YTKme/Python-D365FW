@@ -31,27 +31,6 @@ class TestAccess(unittest.TestCase):
         cls._hostname = cls._data["organizations"]["name"]
 
 
-    def test_login_rest_v1_failure(self):
-        """Test a failure of REST (REpresentational State Transfer) login method.
-
-        Get the failure username and password (user_rest_failure) from the
-        Test Data file and login. Should result in login method returning None
-        value.
-        """
-
-        # Get the user data for success login
-        user_rest_v1_failure = self._data["systemusers"]["user_rest_v1_failure"]
-
-        # Create an instance of Access object and login
-        access = Access(hostname=self._hostname,
-                        client_id=user_rest_v1_failure["client_id"],
-                        client_secret=user_rest_v1_failure["client_secret"],
-                        tenant_id=user_rest_v1_failure["tenant_id"]).login()
-
-        # Test to ensure access is not a string
-        self.assertNotEqual(type(access), str)
-
-
     def test_login_rest_v1_success(self):
         """Test a success of REST (REpresentational State Transfer) login method.
 
@@ -71,6 +50,27 @@ class TestAccess(unittest.TestCase):
 
         # Test to ensure access is a string
         self.assertEqual(type(access), str)
+
+
+    def test_login_rest_v1_failure(self):
+        """Test a failure of REST (REpresentational State Transfer) login method.
+
+        Get the failure username and password (user_rest_failure) from the
+        Test Data file and login. Should result in login method returning None
+        value.
+        """
+
+        # Get the user data for success login
+        user_rest_v1_failure = self._data["systemusers"]["user_rest_v1_failure"]
+
+        # Create an instance of Access object and login
+        access = Access(hostname=self._hostname,
+                        client_id=user_rest_v1_failure["client_id"],
+                        client_secret=user_rest_v1_failure["client_secret"],
+                        tenant_id=user_rest_v1_failure["tenant_id"]).login()
+
+        # Test to ensure access is not a string
+        self.assertNotEqual(type(access), str)
 
 
 if __name__ == "__main__":
