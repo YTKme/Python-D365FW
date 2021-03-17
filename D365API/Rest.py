@@ -18,7 +18,7 @@ class Rest(object):
 
         >>> from D365API.Rest import Rest
         >>> rest = Rest(access)
-        >>> rest.send("GET", "/accounts", None)
+        >>> rest.send('GET', '/accounts', None)
     """
 
     def __init__(self, access, hostname):
@@ -29,16 +29,16 @@ class Rest(object):
             hostname (str): The Hostname of the environment.
         """
 
-        self._access_token = access
-        self._url = "https://{hostname}.crm.dynamics.com/".format(hostname=hostname)
+        self.access_token = access
+        self.url = f'https://{hostname}.crm.dynamics.com/'
 
         # Create header
-        self._header = {
-            "Authorization": "Bearer " + self._access_token,
-            "Content-Type": "application/json; charset=utf-8",
-            "Accept": "application/json",
-            "OData-Version": "4.0",
-            "OData-MaxVersion": "4.0"
+        self.header = {
+            'Authorization': 'Bearer ' + self.access_token,
+            'Content-Type': "application/json; charset=utf-8",
+            'Accept': 'application/json',
+            'OData-Version': '4.0',
+            'OData-MaxVersion': '4.0'
         }
 
 
@@ -59,17 +59,17 @@ class Rest(object):
         # TODO: Expand method to take certificate and extra parameters.
 
         # Create the request URL
-        request_url = self._url
+        request_url = self.url
 
-        if "api/data" in relative_url:
+        if 'api/data' in relative_url:
             # If the complete relative URL is provided
-            request_url += "/" + relative_url
+            request_url += '/' + relative_url
         else:
             # Assume only a partial relative URL is provided
-            request_url += "/api/data/v" + D365_API_V + "/" + relative_url
+            request_url += '/api/data/v' + D365_API_V + '/' + relative_url
 
         # Clean up any extra slash ( / )
-        request_url = re.sub(r"(?<=[^:\s])(\/+\/)", r"/", request_url)
+        request_url = re.sub(r'(?<=[^:\s])(\/+\/)', r'/', request_url)
 
         # Create a session
         session = Session()
@@ -77,7 +77,7 @@ class Rest(object):
         # Create the request
         request = Request(method=method,
                           url=request_url,
-                          headers=self._header,
+                          headers=self.header,
                           data=payload)
                           
         # Prepare the request
