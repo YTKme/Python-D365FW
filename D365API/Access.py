@@ -19,15 +19,15 @@ class Access(object):
             tenant_id (str): The Directory (tenant) ID of the application.
         """
 
-        self._hostname = hostname
-        self._client_id = client_id
-        self._client_secret = client_secret
-        self._tenant_id = tenant_id
-        self._version = 1
-        self._rest_v1_url = "https://login.microsoftonline.com/{}/oauth2/token".format(self._tenant_id)
-        self._resource = "https://{}.api.crm.dynamics.com/".format(hostname)
-        self._rest_v2_url = "https://login.microsoftonline.com/{}/oauth2/v2.0/token".format(self._tenant_id)
-        self._scope = "https://{}.api.crm.dynamics.com/.default".format(hostname)
+        self.hostname = hostname
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.tenant_id = tenant_id
+        self.version = 1
+        self.rest_v1_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/token'
+        self.resource = f'https://{hostname}.api.crm.dynamics.com/'
+        self.rest_v2_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token'
+        self.scope = f'https://{hostname}.api.crm.dynamics.com/.default'
     
 
     def login(self):
@@ -38,9 +38,9 @@ class Access(object):
             depending whether if request is OAuth 1.0 or OAuth 2.0.
         """
 
-        if self._version == 1:
+        if self.version == 1:
             return self._login_rest_v1()
-        elif self._version == 2:
+        elif self.version == 2:
             return self._login_rest_v2()
         else:
             return None
@@ -56,26 +56,26 @@ class Access(object):
 
         # Create header
         header = {
-            "Content-Type": "application/x-www-form-urlencoded"
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
 
         # Create payload
         payload = {
-            "grant_type": "client_credentials",
-            "client_id": self._client_id,
-            "client_secret": self._client_secret,
-            "resource": self._resource
+            'grant_type': 'client_credentials',
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'resource': self.resource
         }
 
         # Send the request
-        r = requests.post(url=self._rest_v1_url,
+        r = requests.post(url=self.rest_v1_url,
                           headers=header,
                           data=payload)
 
         # Check the status code
         if r.status_code == 200:
             # Parse the access token
-            access_token = r.json()["access_token"]
+            access_token = r.json()['access_token']
             return access_token
 
         # There was an error
