@@ -1,5 +1,6 @@
 """
-Microsoft Dynamics 365 Constant
+D365API.Constant
+~~~~~~~~~~~~~~~~
 """
 
 D365_API_V = "9.2"
