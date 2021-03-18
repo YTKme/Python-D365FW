@@ -16,6 +16,28 @@ class Entity(Rest):
     """Entity.
     """
 
+    def __init__(self, access, hostname):
+        """Constructor.
+
+        Args:
+            access (str): The Microsoft Dynamics 365 access token.
+            hostname (str): The Hostname of the environment.
+        """
+
+        # Get the access token and set the URL (Uniform Resource Locator)
+        self.access_token = access
+        self.url = f'https://{hostname}.crm.dynamics.com/'
+
+        # Create header
+        self.header = {
+            "Authorization": "Bearer " + self.access_token,
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json",
+            "OData-Version": "4.0",
+            "OData-MaxVersion": "4.0"
+        }
+
+
     def __getattr__(self, label):
         """Get Attribute Passed In.
 
@@ -26,7 +48,7 @@ class Entity(Rest):
             A instance of the Entity class.
         """
         # Set the name / label
-        self._label = label
+        self.label = label
 
         # Return the self instance
         return self
@@ -43,7 +65,7 @@ class Entity(Rest):
         """
 
         # Create the relative (request) URL
-        relative_url = "/{name}".format(name=self._label)
+        relative_url = "/{name}".format(name=self.label)
 
         # Send the request for a response
         r = self.send(HTTP_POST, relative_url, payload)
@@ -77,9 +99,9 @@ class Entity(Rest):
 
         # Create the relative (request) URL
         if id is not None:
-            relative_url = "/{name}({id})".format(name=self._label, id=id)
+            relative_url = "/{name}({id})".format(name=self.label, id=id)
         else:
-            relative_url = "/{name}".format(name=self._label)
+            relative_url = "/{name}".format(name=self.label)
 
         # Send the request for a response
         r = self.send(HTTP_GET, relative_url, None)
@@ -125,7 +147,7 @@ class Entity(Rest):
         """
 
         # Create the relative (request) URL
-        relative_url = "/{name}({id})".format(name=self._label, id=id)
+        relative_url = "/{name}({id})".format(name=self.label, id=id)
 
         # Send the request for a response
         r = self.send(HTTP_PATCH, relative_url, payload)
@@ -150,7 +172,7 @@ class Entity(Rest):
         """
 
         # Create the relative (request) URL
-        relative_url = "/{name}({id})".format(name=self._label, id=id)
+        relative_url = "/{name}({id})".format(name=self.label, id=id)
 
         # Send the request for a response
         r = self.send(HTTP_DELETE, relative_url, None)
@@ -202,7 +224,7 @@ class Entity(Rest):
             query += "$top={}".format(kwargs["top"])
 
         # Create the relative (request) URL
-        relative_url = "/{name}?{query}".format(name=self._label, query=query)
+        relative_url = "/{name}?{query}".format(name=self.label, query=query)
 
         # Send the request for a response
         r = self.send(HTTP_GET, relative_url, None)
