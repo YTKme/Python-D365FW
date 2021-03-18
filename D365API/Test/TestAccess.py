@@ -21,14 +21,14 @@ class TestAccess(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the test data file
-        test_access_file = os.path.join(current_directory, "TestData.json")
+        test_access_file = os.path.join(current_directory, 'TestData.json')
 
         # Open the file for reading
-        with open(test_access_file, "r") as f:
-            cls._data = json.load(f)
+        with open(test_access_file, 'r') as f:
+            cls.data = json.load(f)
 
         # Get the hostname
-        cls._hostname = cls._data["organizations"]["name"]
+        cls._hostname = cls.data['organizations']['name']
 
 
     def test_login_rest_v1_success(self):
@@ -40,13 +40,13 @@ class TestAccess(unittest.TestCase):
         """
 
         # Get the user data for success login
-        user_rest_v1_success = self._data["systemusers"]["user_rest_v1_success"]
+        user_rest_v1_success = self.data['systemusers']['user_rest_v1_success']
 
         # Create an instance of Access object and login
         access = Access(hostname=self._hostname,
-                        client_id=user_rest_v1_success["client_id"],
-                        client_secret=user_rest_v1_success["client_secret"],
-                        tenant_id=user_rest_v1_success["tenant_id"]).login()
+                        client_id=user_rest_v1_success['client_id'],
+                        client_secret=user_rest_v1_success['client_secret'],
+                        tenant_id=user_rest_v1_success['tenant_id']).login()
 
         # Test to ensure access is a string
         self.assertEqual(type(access), str)
@@ -61,17 +61,17 @@ class TestAccess(unittest.TestCase):
         """
 
         # Get the user data for success login
-        user_rest_v1_failure = self._data["systemusers"]["user_rest_v1_failure"]
+        user_rest_v1_failure = self.data['systemusers']['user_rest_v1_failure']
 
         # Create an instance of Access object and login
         access = Access(hostname=self._hostname,
-                        client_id=user_rest_v1_failure["client_id"],
-                        client_secret=user_rest_v1_failure["client_secret"],
-                        tenant_id=user_rest_v1_failure["tenant_id"]).login()
+                        client_id=user_rest_v1_failure['client_id'],
+                        client_secret=user_rest_v1_failure['client_secret'],
+                        tenant_id=user_rest_v1_failure['tenant_id']).login()
 
         # Test to ensure access is not a string
         self.assertNotEqual(type(access), str)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
