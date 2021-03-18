@@ -28,21 +28,22 @@ class Rest(object):
             access (str): The Microsoft Dynamics 365 access token.
             hostname (str): The Hostname of the environment.
         """
+        pass
 
-        self.access_token = access
-        self.url = f'https://{hostname}.crm.dynamics.com/'
+        # self.access_token = access
+        # self.url = f'https://{hostname}.crm.dynamics.com/'
 
-        # Create header
-        self.header = {
-            'Authorization': 'Bearer ' + self.access_token,
-            'Content-Type': "application/json; charset=utf-8",
-            'Accept': 'application/json',
-            'OData-Version': '4.0',
-            'OData-MaxVersion': '4.0'
-        }
+        # # Create header
+        # self.header = {
+        #     'Authorization': 'Bearer ' + self.access_token,
+        #     'Content-Type': "application/json; charset=utf-8",
+        #     'Accept': 'application/json',
+        #     'OData-Version': '4.0',
+        #     'OData-MaxVersion': '4.0'
+        # }
 
 
-    def send(self, method, relative_url, payload):
+    def send(self, method, url, header=None, payload=None):
         """Send REST Request.
 
         Args:
@@ -56,34 +57,51 @@ class Rest(object):
             A string formatted JSON for the HTTP response object.
         """
 
-        # TODO: Expand method to take certificate and extra parameters.
-
-        # Create the request URL
-        request_url = self.url
-
-        if 'api/data' in relative_url:
-            # If the complete relative URL is provided
-            request_url += '/' + relative_url
-        else:
-            # Assume only a partial relative URL is provided
-            request_url += '/api/data/v' + D365_API_V + '/' + relative_url
-
-        # Clean up any extra slash ( / )
-        request_url = re.sub(r'(?<=[^:\s])(\/+\/)', r'/', request_url)
-
         # Create a session
         session = Session()
 
         # Create the request
         request = Request(method=method,
-                          url=request_url,
-                          headers=self.header,
+                          url=url,
+                          headers=header,
                           data=payload)
-                          
         # Prepare the request
         preparation = request.prepare()
 
         # Send the prepared request for response
         response = session.send(preparation)
 
+        # Return the response
         return response
+
+        # # TODO: Expand method to take certificate and extra parameters.
+
+        # # Create the request URL
+        # request_url = self.url
+
+        # if 'api/data' in relative_url:
+        #     # If the complete relative URL is provided
+        #     request_url += '/' + relative_url
+        # else:
+        #     # Assume only a partial relative URL is provided
+        #     request_url += '/api/data/v' + D365_API_V + '/' + relative_url
+
+        # # Clean up any extra slash ( / )
+        # request_url = re.sub(r'(?<=[^:\s])(\/+\/)', r'/', request_url)
+
+        # # Create a session
+        # session = Session()
+
+        # # Create the request
+        # request = Request(method=method,
+        #                   url=request_url,
+        #                   headers=self.header,
+        #                   data=payload)
+                          
+        # # Prepare the request
+        # preparation = request.prepare()
+
+        # # Send the prepared request for response
+        # response = session.send(preparation)
+
+        # return response
