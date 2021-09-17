@@ -5,6 +5,10 @@ D365API.Entity
 
 import json
 from urllib.parse import urlparse
+import requests
+from requests.exceptions import RequestException
+
+from D365API.Constant import D365_API_V
 
 from D365API.Rest import Rest
 from D365API.Constant import HTTP_GET
@@ -26,15 +30,15 @@ class Entity(Rest):
 
         # Get the access token and set the URL (Uniform Resource Locator)
         self.access_token = access
-        self.url = f'https://{hostname}.crm.dynamics.com/'
+        self.root_url = f'https://{hostname}.api.crm.dynamics.com/api/data/v{D365_API_V}'
 
         # Create header
         self.header = {
-            "Authorization": "Bearer " + self.access_token,
-            "Content-Type": "application/json; charset=utf-8",
-            "Accept": "application/json",
-            "OData-Version": "4.0",
-            "OData-MaxVersion": "4.0"
+            'Authorization': 'Bearer ' + self.access_token,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept': 'application/json',
+            'OData-Version': '4.0',
+            'OData-MaxVersion': '4.0'
         }
 
 
@@ -64,18 +68,20 @@ class Entity(Rest):
             A string for the unique identifier (ID) of the Entity.
         """
 
-        # Create the relative (request) URL
-        relative_url = "/{name}".format(name=self.label)
+        # Create the request URL
+        request_url = f'{self.root_url}/{self.label}'
 
         # Send the request for a response
-        r = self.send(HTTP_POST, relative_url, payload)
+        r = requests.post(url=request_url,
+                          headers=self.header,
+                          data=payload)
 
         # Check the status code
         if r.status_code == 204:
             # Parse the unique identifier (ID) of the entity
-            entity_url = r.headers["OData-EntityId"]
-            begin_id = entity_url.find("(") + 1
-            end_id = entity_url.find(")")
+            entity_url = r.headers['OData-EntityId']
+            begin_id = entity_url.find('(') + 1
+            end_id = entity_url.find(')')
             entity_id = entity_url[begin_id:end_id]
             # Return the unique identifier (ID) of the entity
             return entity_id
@@ -97,39 +103,49 @@ class Entity(Rest):
         # Create a read result list to store all the read result
         read_result_list = []
 
-        # Create the relative (request) URL
+        # Create the request URL
         if id is not None:
-            relative_url = "/{name}({id})".format(name=self.label, id=id)
+            request_url = f'{self.root_url}/{self.label}({id})'
         else:
-            relative_url = "/{name}".format(name=self.label)
+            request_url = f'{self.root_url}/{self.label}'
 
         # Send the request for a response
-        r = self.send(HTTP_GET, relative_url, None)
+        r = requests.get(url=request_url,
+                         headers=self.header)
 
-        # Parse the read result
-        read_result = json.loads(r.text)
+        # Check the failure status code
+        if r.status_code != 200:
+            return None
 
-        # Check the status code
+        # Check the success status code
         if r.status_code == 200:
-            # Add the `value` to read result list
-            read_result_list.extend(read_result["value"])
+            # Parse the read result
+            read_result = json.loads(r.text)
+
+            # Add the read result to list
+            if 'value' in read_result:
+                # Use extend for multiple result
+                read_result_list.extend(read_result['value'])
+            else:
+                # Use append for single result
+                read_result_list.append(read_result)
 
         # Check if there are more result
-        while "@odata.nextLink" in read_result:
+        while '@odata.nextLink' in read_result:
             # If there are more result
             # Parse the `nextLink` URL
-            u = urlparse(read_result["@odata.nextLink"])
+            u = urlparse(read_result['@odata.nextLink'])
             # Rebuild the relative URL using the path and query
-            relative_url = u.path + u.query
+            request_url = u.path + u.query
             # Send the request for a response
-            r = self.send(HTTP_GET, relative_url, None)
+            r = requests.get(url=request_url)
 
             # Check the status code
             if r.status_code == 200:
                 # Parse the read result
                 read_result = json.loads(r.text)
                 # Add the `value` to read result list
-                read_result_list.append(read_result["value"])
+                read_result_list.append(read_result['value'])
 
         # Return all the read result
         return read_result_list
@@ -146,11 +162,13 @@ class Entity(Rest):
             An integer for the status code of the update request.
         """
 
-        # Create the relative (request) URL
-        relative_url = "/{name}({id})".format(name=self.label, id=id)
+        # Create the request URL
+        request_url = f'{self.root_url}/{self.label}({id})'
 
         # Send the request for a response
-        r = self.send(HTTP_PATCH, relative_url, payload)
+        r = requests.patch(url=request_url,
+                           headers=self.header,
+                           data=payload)
 
         # Check the status code
         if r.status_code == 204:
@@ -171,11 +189,11 @@ class Entity(Rest):
             An integer for the status code of the delete request.
         """
 
-        # Create the relative (request) URL
-        relative_url = "/{name}({id})".format(name=self.label, id=id)
+        # Create the request URL
+        request_url = f'{self.root_url}/{self.label}({id})'
 
         # Send the request for a response
-        r = self.send(HTTP_DELETE, relative_url, None)
+        r = requests.delete(url=request_url)
 
         # Check the status code
         if r.status_code == 204:
