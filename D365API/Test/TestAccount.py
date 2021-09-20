@@ -3,6 +3,7 @@ D365API.TestAccount
 ~~~~~~~~~~~~~~~~~~~
 """
 
+import requests
 import json
 import os
 import random
@@ -36,23 +37,23 @@ class TestAccountCreate(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the Test Data file
-        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+        cls.test_data_file = os.path.join(current_directory, 'TestData.json')
 
         # Open the file for reading
-        with open(cls.test_data_file, "r") as f:
+        with open(cls.test_data_file, 'r') as f:
             cls.data = json.load(f)
 
         # Get the hostname from the Test Data
-        cls.hostname = cls.data["organizations"]["name"]
+        cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success["client_id"],
-                            client_secret=user_rest_v1_success["client_secret"],
-                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+                            client_id=user_rest_v1_success['client_id'],
+                            client_secret=user_rest_v1_success['client_secret'],
+                            tenant_id=user_rest_v1_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -69,7 +70,7 @@ class TestAccountCreate(unittest.TestCase):
         # Create the payload
         payload = {
             # Generate a random Account field
-            "random": "Random-{}".format(random.randrange(10000, 99999))
+            'random': 'Random-{}'.format(random.randrange(10000, 99999))
         }
 
         # Make a request to create the Account with random field
@@ -92,7 +93,7 @@ class TestAccountCreate(unittest.TestCase):
         # Create the payload
         payload = {
             # Generate a random Account description
-            "description": "Description-{}".format(random.randrange(10000, 99999))
+            'description': 'Description-{}'.format(random.randrange(10000, 99999))
         }
 
         # Make a request to create the Account with random description
@@ -114,7 +115,7 @@ class TestAccountCreate(unittest.TestCase):
         # Create the payload
         payload = {
             # Generate a random Account Name
-            "name": "Account-{}".format(random.randrange(10000, 99999))
+            'name': 'Account-{}'.format(random.randrange(10000, 99999))
         }
 
         # Make a request to create the Account
@@ -123,12 +124,12 @@ class TestAccountCreate(unittest.TestCase):
         create_account_id = self.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        self.data["accounts"]["create_account_success"] = {}
+        self.data['accounts']['create_account_success'] = {}
         # Create or update the Account ID in the Test Data
-        self.data["accounts"]["create_account_success"]["id"] = create_account_id
+        self.data['accounts']['create_account_success']['id'] = create_account_id
 
         # Write the new Test Data to file
-        with open(self.test_data_file, "w") as f:
+        with open(self.test_data_file, 'w') as f:
             json.dump(self.data, f)
 
         # Test to ensure Account ID is a string
@@ -143,17 +144,17 @@ class TestAccountCreate(unittest.TestCase):
         """
 
         # Get the create Account success unique identifier (ID)
-        create_account_id = cls.data["accounts"]["create_account_success"]["id"]
+        create_account_id = cls.data['accounts']['create_account_success']['id']
         # Make a request to delete the Account
         create_account = cls.entity.accounts.delete(create_account_id)
         # Check if the delete was successful
         if create_account == 204:
             # Delete the Account entry from the Test Data
-            if "create_account_success" in cls.data["accounts"]:
-                del cls.data["accounts"]["create_account_success"]
+            if 'create_account_success' in cls.data['accounts']:
+                del cls.data['accounts']['create_account_success']
 
         # Write the new Test Data to file
-        with open(cls.test_data_file, "w") as f:
+        with open(cls.test_data_file, 'w') as f:
             json.dump(cls.data, f)
 
 
@@ -171,23 +172,23 @@ class TestAccountRead(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the Test Data file
-        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+        cls.test_data_file = os.path.join(current_directory, 'TestData.json')
 
         # Open the file for reading
-        with open(cls.test_data_file, "r") as f:
+        with open(cls.test_data_file, 'r') as f:
             cls.data = json.load(f)
 
         # Get the hostname from the Test Data
-        cls.hostname = cls.data["organizations"]["name"]
+        cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success["client_id"],
-                            client_secret=user_rest_v1_success["client_secret"],
-                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+                            client_id=user_rest_v1_success['client_id'],
+                            client_secret=user_rest_v1_success['client_secret'],
+                            tenant_id=user_rest_v1_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -195,7 +196,7 @@ class TestAccountRead(unittest.TestCase):
         # Create the payload
         payload = {
             # Generate a random Account Name
-            "name": "Account-{}".format(random.randrange(10000, 99999))
+            'name': 'Account-{}'.format(random.randrange(10000, 99999))
         }
 
         # Make a request to create the Account
@@ -204,12 +205,12 @@ class TestAccountRead(unittest.TestCase):
         account_id = cls.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        cls.data["accounts"]["read_account_success"] = {}
+        cls.data['accounts']['read_account_success'] = {}
         # Create or update the Account ID in the Test Data
-        cls.data["accounts"]["read_account_success"]["id"] = account_id
+        cls.data['accounts']['read_account_success']['id'] = account_id
 
         # Write the new Test Data to file
-        with open(cls.test_data_file, "w") as f:
+        with open(cls.test_data_file, 'w') as f:
             json.dump(cls.data, f)
 
 
@@ -221,7 +222,7 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the read Account failure unique identifier (ID)
-        read_account_id = self.data["accounts"]["read_account_failure"]["id"]
+        read_account_id = self.data['accounts']['read_account_failure']['id']
 
         # Make a request to read the Account with unique identifier (ID)
         account = self.entity.accounts.read(read_account_id)
@@ -239,13 +240,13 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the Account unique identifier (ID) from Test Data
-        read_account_id = self.data["accounts"]["read_account_success"]["id"]
+        read_account_id = self.data['accounts']['read_account_success']['id']
 
         # Make a request to read the Account
         read_account = self.entity.accounts.read(read_account_id)
 
         # Test to ensure Account information is a string
-        self.assertEqual(type(read_account), str)
+        self.assertEqual(type(read_account), list)
 
 
     def test_account_read_count_success(self):
@@ -258,9 +259,11 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the Account count using the `RetrieveTotalRecordCount` function
-        account_count_result = self.entity.send(HTTP_GET, "RetrieveTotalRecordCount(EntityNames=['account'])", None)
+        request_url = f"{self.entity.accounts.root_url}/RetrieveTotalRecordCount(EntityNames=['account'])"
+        account_count_result = requests.get(request_url)
+
         # Parse the Account count result
-        account_count = json.loads(account_count_result.text)["EntityRecordCountCollection"]["Values"][0]
+        account_count = json.loads(account_count_result.text)['EntityRecordCountCollection']['Values'][0]
 
         # Make a request to read the Account
         read_account = self.entity.accounts.read()
@@ -277,17 +280,17 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the read Account success unique identifier (ID)
-        read_account_id = cls.data["accounts"]["read_account_success"]["id"]
+        read_account_id = cls.data['accounts']['read_account_success']['id']
         # Make a request to delete the Account
         read_account = cls.entity.accounts.delete(read_account_id)
         # Check if the delete was successful
         if read_account == 204:
             # Delete the Account entry from the Test Data
-            if "read_account_success" in cls.data["accounts"]:
-                del cls.data["accounts"]["read_account_success"]
+            if 'read_account_success' in cls.data['accounts']:
+                del cls.data['accounts']['read_account_success']
 
         # Write the new Test Data to file
-        with open(cls.test_data_file, "w") as f:
+        with open(cls.test_data_file, 'w') as f:
             json.dump(cls.data, f)
 
 
