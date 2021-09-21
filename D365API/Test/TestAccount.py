@@ -12,7 +12,6 @@ import unittest
 from D365API.Access import Access
 from D365API.Entity import Entity
 from D365API.Constant import TEST_FILE
-from D365API.Constant import HTTP_GET
 
 def setUpModule():
     """Set Up Module"""
@@ -48,13 +47,13 @@ class TestAccountCreate(unittest.TestCase):
         cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success['client_id'],
-                            client_secret=user_rest_v1_success['client_secret'],
-                            tenant_id=user_rest_v1_success['tenant_id']).login()
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -183,13 +182,13 @@ class TestAccountRead(unittest.TestCase):
         cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success['client_id'],
-                            client_secret=user_rest_v1_success['client_secret'],
-                            tenant_id=user_rest_v1_success['tenant_id']).login()
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -332,13 +331,13 @@ class TestAccountUpdate(unittest.TestCase):
         cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success['client_id'],
-                            client_secret=user_rest_v1_success['client_secret'],
-                            tenant_id=user_rest_v1_success['tenant_id']).login()
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -460,13 +459,13 @@ class TestAccountDelete(unittest.TestCase):
         cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success['client_id'],
-                            client_secret=user_rest_v1_success['client_secret'],
-                            tenant_id=user_rest_v1_success['tenant_id']).login()
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -573,13 +572,13 @@ class TestAccountQuery(unittest.TestCase):
         cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success['client_id'],
-                            client_secret=user_rest_v1_success['client_secret'],
-                            tenant_id=user_rest_v1_success['tenant_id']).login()
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)

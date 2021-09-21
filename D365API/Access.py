@@ -24,9 +24,9 @@ class Access(object):
         self.client_secret = client_secret
         self.tenant_id = tenant_id
         self.version = 1
-        self.oauth_v1_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/token'
+        self.oauth_1_0_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/token'
         self.resource = f'https://{hostname}.api.crm.dynamics.com/'
-        self.oath_v2_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token'
+        self.oath_2_0_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token'
         self.scope = f'https://{hostname}.api.crm.dynamics.com/.default'
     
 
@@ -40,14 +40,14 @@ class Access(object):
         """
 
         if self.version == 1:
-            return self.login_oauth_v1()
+            return self.login_oauth_1_0()
         elif self.version == 2:
-            return self.login_oauth_v2()
+            return self.login_oauth_2_0()
         else:
             return None
 
 
-    def login_oauth_v1(self):
+    def login_oauth_1_0(self):
         """Login via REST (REpresentational State Transfer) Version 1.
 
         Returns:
@@ -69,7 +69,7 @@ class Access(object):
         }
 
         # Send the request
-        r = requests.post(url=self.oauth_v1_url,
+        r = requests.post(url=self.oauth_1_0_url,
                           headers=header,
                           data=payload)
 
@@ -83,5 +83,5 @@ class Access(object):
         return None
 
 
-    def login_oauth_v2(self):
+    def login_oauth_2_0(self):
         pass
