@@ -6,8 +6,6 @@ D365API.Entity
 import json
 from urllib.parse import urlparse
 import requests
-from requests.api import head
-from requests.exceptions import RequestException
 
 from D365API.Constant import D365_API_V
 
