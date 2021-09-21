@@ -59,8 +59,8 @@ class TestAccountCreate(unittest.TestCase):
         cls.entity = Entity(cls.access, cls.hostname)
 
 
-    def test_account_create_random_failure(self):
-        """Test a random failure for Account create.
+    def test_create_account_random_failure(self):
+        """Test a random failure for create Account.
 
         Get the hostname from the Test Data and the generated a random
         Account field to make a request for create. Should result in
@@ -82,8 +82,8 @@ class TestAccountCreate(unittest.TestCase):
 
 
     @unittest.expectedFailure
-    def test_account_create_description_failure(self):
-        """Test a description failure for Account create.
+    def test_create_account_description_failure(self):
+        """Test a description failure for create Account.
 
         Get the hostname from the Test Data and the generated a random
         Account Description to make a request for create. Should result
@@ -104,8 +104,8 @@ class TestAccountCreate(unittest.TestCase):
         self.assertIsNone(create_account_id)
 
 
-    def test_account_create_success(self):
-        """Test a success for Account create.
+    def test_create_account_success(self):
+        """Test a success for create Account.
 
         Get the hostname from the Test Data and the generated Account
         Name to make a request for create. Should result in response
@@ -124,9 +124,9 @@ class TestAccountCreate(unittest.TestCase):
         create_account_id = self.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        self.data['accounts']['create_account_success'] = {}
+        self.data['accounts']['create_success_account'] = {}
         # Create or update the Account ID in the Test Data
-        self.data['accounts']['create_account_success']['id'] = create_account_id
+        self.data['accounts']['create_success_account']['id'] = create_account_id
 
         # Write the new Test Data to file
         with open(self.test_data_file, 'w') as f:
@@ -144,14 +144,14 @@ class TestAccountCreate(unittest.TestCase):
         """
 
         # Get the create Account success unique identifier (ID)
-        create_account_id = cls.data['accounts']['create_account_success']['id']
+        create_account_id = cls.data['accounts']['create_success_account']['id']
         # Make a request to delete the Account
         create_account = cls.entity.accounts.delete(create_account_id)
         # Check if the delete was successful
         if create_account == 204:
             # Delete the Account entry from the Test Data
-            if 'create_account_success' in cls.data['accounts']:
-                del cls.data['accounts']['create_account_success']
+            if 'create_success_account' in cls.data['accounts']:
+                del cls.data['accounts']['create_success_account']
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
