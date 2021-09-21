@@ -563,23 +563,23 @@ class TestAccountQuery(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the Test Data file
-        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+        cls.test_data_file = os.path.join(current_directory, TEST_FILE)
 
         # Open the file for reading
-        with open(cls.test_data_file, "r") as f:
+        with open(cls.test_data_file, 'r') as f:
             cls.data = json.load(f)
 
         # Get the hostname from the Test Data
-        cls.hostname = cls.data["organizations"]["name"]
+        cls.hostname = cls.data['organizations']['name']
 
         # Get the user data for success login
-        user_rest_v1_success = cls.data["systemusers"]["user_rest_v1_success"]
+        user_rest_v1_success = cls.data['systemusers']['user_rest_v1_success']
 
         # Create an instance of Access object and login
         cls.access = Access(hostname=cls.hostname,
-                            client_id=user_rest_v1_success["client_id"],
-                            client_secret=user_rest_v1_success["client_secret"],
-                            tenant_id=user_rest_v1_success["tenant_id"]).login()
+                            client_id=user_rest_v1_success['client_id'],
+                            client_secret=user_rest_v1_success['client_secret'],
+                            tenant_id=user_rest_v1_success['tenant_id']).login()
 
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
@@ -596,7 +596,7 @@ class TestAccountQuery(unittest.TestCase):
 
         # Define the query property
         query = {
-            "select": "accountid,name"
+            'select': 'accountid,name'
         }
 
         # Make a request to query the Account
@@ -620,17 +620,17 @@ class TestAccountQuery(unittest.TestCase):
         
         # Define the query property
         query = {
-            "top": top_count
+            'top': top_count
         }
 
         # Make a request to query the Account
         query_account = self.entity.accounts.query(**query)
 
         # Count the number of result
-        query_account_count = len(json.loads(query_account)["value"])
+        query_account_count = len(json.loads(query_account)['value'])
 
-        # Test to ensure the `top` count is the same as the result count
-        self.assertEqual(top_count, query_account_count)
+        # Test to ensure the Account query count is same as `top` count
+        self.assertLessEqual(query_account_count, top_count)
 
 
 def suite():

@@ -231,22 +231,25 @@ class Entity(object):
         Returns:
             A string formatted JSON for the result of the query.
         """
-        
-        # Build the query
-        query = ""
+
+        # Initialize query
+        query = ''
 
         # If the `select` system query option is specified
-        if "select" in kwargs:
-            query += "$select={}".format(kwargs["select"])
+        if 'select' in kwargs:
+            # Build the query
+            query = f"$select={kwargs['select']}"
         # If the `top` system query option is specified
-        if "top" in kwargs:
-            query += "$top={}".format(kwargs["top"])
+        if 'top' in kwargs:
+            # Build the query
+            query = f"$top={kwargs['top']}"
 
-        # Create the relative (request) URL
-        relative_url = "/{name}?{query}".format(name=self.label, query=query)
+        # Create the request URL
+        request_url = f'{self.root_url}/{self.label}?{query}'
 
         # Send the request for a response
-        r = requests.get(url=relative_url)
+        r = requests.get(url=request_url,
+                         headers=self.header)
 
         # Check the status code
         if r.status_code == 200:
