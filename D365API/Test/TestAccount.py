@@ -11,6 +11,7 @@ import unittest
 
 from D365API.Access import Access
 from D365API.Entity import Entity
+from D365API.Constant import TEST_FILE
 from D365API.Constant import HTTP_GET
 
 def setUpModule():
@@ -37,7 +38,7 @@ class TestAccountCreate(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the Test Data file
-        cls.test_data_file = os.path.join(current_directory, 'TestData.json')
+        cls.test_data_file = os.path.join(current_directory, TEST_FILE)
 
         # Open the file for reading
         with open(cls.test_data_file, 'r') as f:
@@ -172,7 +173,7 @@ class TestAccountRead(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the Test Data file
-        cls.test_data_file = os.path.join(current_directory, 'TestData.json')
+        cls.test_data_file = os.path.join(current_directory, TEST_FILE)
 
         # Open the file for reading
         with open(cls.test_data_file, 'r') as f:
@@ -235,7 +236,7 @@ class TestAccountRead(unittest.TestCase):
         """Test a success for Account read.
 
         Get the hostname from the Test Data to make a request for read.
-        Should result in response with status code 200 OK and a string
+        Should result in response with status code 200 OK and a list
         formatted JSON for the result of the read.
         """
 
@@ -253,23 +254,36 @@ class TestAccountRead(unittest.TestCase):
         """Test a success for Account read count.
 
         Get the hostname from the Test Data to make a request for read.
-        Should result in response with a list, the count of the read
-        result list should be 1 greater than the count of the function
-        call. This is due to Account create from `setUpClass`.
+        Should result in response with a list, the count Account result
+        is +1 more than the read Account result from  the
+        `RetrieveTotalRecordCount` function due to `setUpClass`
+        function.
         """
 
         # Get the Account count using the `RetrieveTotalRecordCount` function
         request_url = f"{self.entity.accounts.root_url}/RetrieveTotalRecordCount(EntityNames=['account'])"
-        account_count_result = requests.get(request_url)
+
+        # Create header
+        header = {
+            'Authorization': 'Bearer ' + self.access,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept': 'application/json',
+            'OData-Version': '4.0',
+            'OData-MaxVersion': '4.0'
+        }
+
+        # Make a request to count the total Account
+        count_account_result = requests.get(url=request_url,
+                                            headers=header)
 
         # Parse the Account count result
-        account_count = json.loads(account_count_result.text)['EntityRecordCountCollection']['Values'][0]
+        count_account = json.loads(count_account_result.text)['EntityRecordCountCollection']['Values'][0]
 
         # Make a request to read the Account
         read_account = self.entity.accounts.read()
 
-        # Test to ensure Account count (+ 1) is the same as Account read
-        self.assertEqual(account_count + 1, len(read_account))
+        # Test to ensure count Account (+1) is the same as read Account
+        self.assertEqual((count_account + 1), len(read_account))
 
 
     @classmethod
@@ -308,7 +322,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the Test Data file
-        cls.test_data_file = os.path.join(current_directory, "TestData.json")
+        cls.test_data_file = os.path.join(current_directory, TEST_FILE)
 
         # Open the file for reading
         with open(cls.test_data_file, "r") as f:
