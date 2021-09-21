@@ -205,9 +205,9 @@ class TestAccountRead(unittest.TestCase):
         account_id = cls.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        cls.data['accounts']['read_account_success'] = {}
+        cls.data['accounts']['read_success_account'] = {}
         # Create or update the Account ID in the Test Data
-        cls.data['accounts']['read_account_success']['id'] = account_id
+        cls.data['accounts']['read_success_account']['id'] = account_id
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
@@ -215,14 +215,14 @@ class TestAccountRead(unittest.TestCase):
 
 
     def test_account_read_failure(self):
-        """Test a failure of Account read.
+        """Test a failure of read Account.
 
         Get the hostname from the Test Data to make a request for read.
         Should result in response with None.
         """
 
         # Get the read Account failure unique identifier (ID)
-        read_account_id = self.data['accounts']['read_account_failure']['id']
+        read_account_id = self.data['accounts']['read_failure_account']['id']
 
         # Make a request to read the Account with unique identifier (ID)
         account = self.entity.accounts.read(read_account_id)
@@ -232,7 +232,7 @@ class TestAccountRead(unittest.TestCase):
 
 
     def test_account_read_success(self):
-        """Test a success for Account read.
+        """Test a success for read Account.
 
         Get the hostname from the Test Data to make a request for read.
         Should result in response with status code 200 OK and a list
@@ -240,7 +240,7 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the Account unique identifier (ID) from Test Data
-        read_account_id = self.data['accounts']['read_account_success']['id']
+        read_account_id = self.data['accounts']['read_success_account']['id']
 
         # Make a request to read the Account
         read_account = self.entity.accounts.read(read_account_id)
@@ -250,7 +250,7 @@ class TestAccountRead(unittest.TestCase):
 
 
     def test_account_read_count_success(self):
-        """Test a success for Account read count.
+        """Test a success for read count Account.
 
         Get the hostname from the Test Data to make a request for read.
         Should result in response with a list, the count Account result
@@ -293,14 +293,14 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the read Account success unique identifier (ID)
-        read_account_id = cls.data['accounts']['read_account_success']['id']
+        read_account_id = cls.data['accounts']['read_success_account']['id']
         # Make a request to delete the Account
         read_account = cls.entity.accounts.delete(read_account_id)
         # Check if the delete was successful
         if read_account == 204:
             # Delete the Account entry from the Test Data
-            if 'read_account_success' in cls.data['accounts']:
-                del cls.data['accounts']['read_account_success']
+            if 'read_success_account' in cls.data['accounts']:
+                del cls.data['accounts']['read_success_account']
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
