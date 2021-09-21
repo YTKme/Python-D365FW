@@ -632,6 +632,17 @@ class TestAccountQuery(unittest.TestCase):
         self.assertLessEqual(query_account_count, top_count)
 
 
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+
+        # No need clean up
+        pass
+
+
 def suite():
     """Test Suite"""
 
