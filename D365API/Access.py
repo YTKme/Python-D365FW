@@ -34,19 +34,20 @@ class Access(object):
         """Login to Microsoft Dynamics 365.
 
         Returns:
-            A string for the Microsoft Dynamics 365 access (bearer) token
-            depending whether if request is OAuth 1.0 or OAuth 2.0.
+            A string for the Microsoft Dynamics 365 access (bearer)
+            token depending whether if request is OAuth 1.0 or OAuth
+            2.0.
         """
 
         if self.version == 1:
-            return self._login_rest_v1()
+            return self.login_rest_v1()
         elif self.version == 2:
-            return self._login_rest_v2()
+            return self.login_rest_v2()
         else:
             return None
 
 
-    def _login_rest_v1(self):
+    def login_rest_v1(self):
         """Login via REST (REpresentational State Transfer) Version 1.
 
         Returns:
@@ -82,5 +83,5 @@ class Access(object):
         return None
 
 
-    def _login_rest_v2(self):
+    def login_rest_v2(self):
         pass
