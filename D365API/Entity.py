@@ -6,17 +6,12 @@ D365API.Entity
 import json
 from urllib.parse import urlparse
 import requests
+from requests.api import head
 from requests.exceptions import RequestException
 
 from D365API.Constant import D365_API_V
 
-from D365API.Rest import Rest
-from D365API.Constant import HTTP_GET
-from D365API.Constant import HTTP_POST
-from D365API.Constant import HTTP_PATCH
-from D365API.Constant import HTTP_DELETE
-
-class Entity(Rest):
+class Entity(object):
     """Entity.
     """
 
@@ -133,19 +128,24 @@ class Entity(Rest):
         # Check if there are more result
         while '@odata.nextLink' in read_result:
             # If there are more result
-            # Parse the `nextLink` URL
-            u = urlparse(read_result['@odata.nextLink'])
-            # Rebuild the relative URL using the path and query
-            request_url = u.path + u.query
+            # Parse the URL for the next set of result
+            request_url = read_result['@odata.nextLink']
             # Send the request for a response
-            r = requests.get(url=request_url)
+            r = requests.get(url=request_url,
+                             headers=self.header)
 
             # Check the status code
             if r.status_code == 200:
                 # Parse the read result
                 read_result = json.loads(r.text)
-                # Add the `value` to read result list
-                read_result_list.append(read_result['value'])
+
+                # Add the read result to list
+                if 'value' in read_result:
+                    # Use extend for multiple result
+                    read_result_list.extend(read_result['value'])
+                else:
+                    # Use append for single result
+                    read_result_list.append(read_result)
 
         # Return all the read result
         return read_result_list
@@ -193,7 +193,8 @@ class Entity(Rest):
         request_url = f'{self.root_url}/{self.label}({id})'
 
         # Send the request for a response
-        r = requests.delete(url=request_url)
+        r = requests.delete(url=request_url,
+                            headers=self.header)
 
         # Check the status code
         if r.status_code == 204:
@@ -245,7 +246,7 @@ class Entity(Rest):
         relative_url = "/{name}?{query}".format(name=self.label, query=query)
 
         # Send the request for a response
-        r = self.send(HTTP_GET, relative_url, None)
+        r = requests.get(url=relative_url)
 
         # Check the status code
         if r.status_code == 200:
