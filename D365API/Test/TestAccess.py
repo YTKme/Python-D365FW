@@ -35,19 +35,19 @@ class TestAccess(unittest.TestCase):
     def test_login_rest_v1_success(self):
         """Test a success of REST (REpresentational State Transfer) login method.
 
-        Get the success username and password (user_rest_v1_success)
+        Get the success username and password (oauth_1_0_user_success)
         from the Test Data file and login. Should result in login method
         returning an access token.
         """
 
         # Get the user data for success login
-        user_rest_v1_success = self.data['systemusers']['user_rest_v1_success']
+        oauth_1_0_user_success = self.data['systemusers']['oauth_1_0_user_success']
 
         # Create an instance of Access object and login
         access = Access(hostname=self._hostname,
-                        client_id=user_rest_v1_success['client_id'],
-                        client_secret=user_rest_v1_success['client_secret'],
-                        tenant_id=user_rest_v1_success['tenant_id']).login()
+                        client_id=oauth_1_0_user_success['client_id'],
+                        client_secret=oauth_1_0_user_success['client_secret'],
+                        tenant_id=oauth_1_0_user_success['tenant_id']).login()
 
         # Test to ensure access is a string
         self.assertEqual(type(access), str)
@@ -56,19 +56,19 @@ class TestAccess(unittest.TestCase):
     def test_login_rest_v1_failure(self):
         """Test a failure of REST (REpresentational State Transfer) login method.
 
-        Get the failure username and password (user_rest_failure) from
-        the Test Data file and login. Should result in login method
+        Get the failure username and password (oauth_1_0_user_failure)
+        from the Test Data file and login. Should result in login method
         returning None value.
         """
 
         # Get the user data for success login
-        user_rest_v1_failure = self.data['systemusers']['user_rest_v1_failure']
+        oauth_1_0_user_failure = self.data['systemusers']['oauth_1_0_user_failure']
 
         # Create an instance of Access object and login
         access = Access(hostname=self._hostname,
-                        client_id=user_rest_v1_failure['client_id'],
-                        client_secret=user_rest_v1_failure['client_secret'],
-                        tenant_id=user_rest_v1_failure['tenant_id']).login()
+                        client_id=oauth_1_0_user_failure['client_id'],
+                        client_secret=oauth_1_0_user_failure['client_secret'],
+                        tenant_id=oauth_1_0_user_failure['tenant_id']).login()
 
         # Test to ensure access is not a string
         self.assertNotEqual(type(access), str)
