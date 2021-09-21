@@ -1,0 +1,33 @@
+{
+    "organizations": {
+        "name": "<name>"
+    },
+    "systemusers": {
+        "oauth_1_0_user_success": {
+            "username": "<success_username>",
+            "client_id": "<success_client_id>",
+            "client_secret": "<success_client_secret>",
+            "tenant_id": "<success_tenant_id>"
+        },
+        "oauth_1_0_user_failure": {
+            "username": "<failure_username>",
+            "client_id": "<failure_client_id>",
+            "client_secret": "<failure_client_secret>",
+            "tenant_id": "<failure_tenant_id>"
+        }
+    },
+    "accounts": {
+        "read_failure_account": {
+            "id": "<read_failure_account_id>"
+        },
+        "update_failure_account": {
+            "id": "<update_failure_account_id>"
+        },
+        "delete_failure_account": {
+            "id": "<delete_failure_account_id>"
+        },
+        "create_success_account": {
+            "id": "<create_success_account_id>"
+        }
+    }
+}
