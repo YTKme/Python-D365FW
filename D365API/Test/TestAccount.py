@@ -482,9 +482,9 @@ class TestAccountDelete(unittest.TestCase):
         account_id = cls.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        cls.data['accounts']['delete_account_success'] = {}
+        cls.data['accounts']['delete_success_account'] = {}
         # Create or update the Account ID in the Test Data
-        cls.data['accounts']['delete_account_success']['id'] = account_id
+        cls.data['accounts']['delete_success_account']['id'] = account_id
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
@@ -500,7 +500,7 @@ class TestAccountDelete(unittest.TestCase):
         """
 
         # Get the delete Account failure unique identifier (ID)
-        delete_account_id = self.data['accounts']['delete_account_failure']['id']
+        delete_account_id = self.data['accounts']['delete_failure_account']['id']
 
         # Make a request to delete the Account with unique identifier (ID)
         # Delete the Account
@@ -519,15 +519,15 @@ class TestAccountDelete(unittest.TestCase):
         """
 
         # Get the delete Account success unique identifier (ID)
-        delete_account_id = self.data['accounts']['delete_account_success']['id']
+        delete_account_id = self.data['accounts']['delete_success_account']['id']
 
         # Make a request to delete the Account with unique identifier (ID)
         # Delete the Account
         delete_account = self.entity.accounts.delete(delete_account_id)
 
         # Delete the Account entry from the Test Data
-        if 'delete_account_success' in self.data['accounts']:
-            del self.data['accounts']['delete_account_success']
+        if 'delete_success_account' in self.data['accounts']:
+            del self.data['accounts']['delete_success_account']
 
         # Write the new Test Data to file
         with open(self.test_data_file, 'w') as f:
