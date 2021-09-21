@@ -7,6 +7,7 @@ import json
 import os
 import unittest
 from D365API.Access import Access
+from D365API.Constant import TEST_FILE
 
 class TestAccess(unittest.TestCase):
     """Test the Access module."""
@@ -21,7 +22,7 @@ class TestAccess(unittest.TestCase):
         # Get the current directory of the file
         current_directory = os.path.dirname(os.path.abspath(__file__))
         # Get the path of the test data file
-        test_access_file = os.path.join(current_directory, 'TestData.json')
+        test_access_file = os.path.join(current_directory, TEST_FILE)
 
         # Open the file for reading
         with open(test_access_file, 'r') as f:
@@ -34,9 +35,9 @@ class TestAccess(unittest.TestCase):
     def test_login_rest_v1_success(self):
         """Test a success of REST (REpresentational State Transfer) login method.
 
-        Get the success username and password (user_rest_v1_success) from the
-        Test Data file and login. Should result in login method returning an
-        access token.
+        Get the success username and password (user_rest_v1_success)
+        from the Test Data file and login. Should result in login method
+        returning an access token.
         """
 
         # Get the user data for success login
@@ -55,9 +56,9 @@ class TestAccess(unittest.TestCase):
     def test_login_rest_v1_failure(self):
         """Test a failure of REST (REpresentational State Transfer) login method.
 
-        Get the failure username and password (user_rest_failure) from the
-        Test Data file and login. Should result in login method returning None
-        value.
+        Get the failure username and password (user_rest_failure) from
+        the Test Data file and login. Should result in login method
+        returning None value.
         """
 
         # Get the user data for success login
