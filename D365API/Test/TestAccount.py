@@ -354,9 +354,9 @@ class TestAccountUpdate(unittest.TestCase):
         account_id = cls.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        cls.data['accounts']['update_account_success'] = {}
+        cls.data['accounts']['update_success_account'] = {}
         # Create or update the Account ID in the Test Data
-        cls.data['accounts']['update_account_success']['id'] = account_id
+        cls.data['accounts']['update_success_account']['id'] = account_id
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
@@ -372,7 +372,7 @@ class TestAccountUpdate(unittest.TestCase):
         """
 
         # Get the read Account failure unique identifier (ID)
-        update_account_id = self.data['accounts']['update_account_failure']['id']
+        update_account_id = self.data['accounts']['update_failure_account']['id']
 
         # Create the payload
         payload = {
@@ -397,7 +397,7 @@ class TestAccountUpdate(unittest.TestCase):
         """
 
         # Get the read Account success data
-        update_account_id = self.data['accounts']['update_account_success']['id']
+        update_account_id = self.data['accounts']['update_success_account']['id']
 
         # Create the payload
         payload = {
@@ -421,14 +421,14 @@ class TestAccountUpdate(unittest.TestCase):
         """
 
         # Get the read Account success unique identifier (ID)
-        update_account_id = cls.data['accounts']['update_account_success']['id']
+        update_account_id = cls.data['accounts']['update_success_account']['id']
         # Make a request to delete the Account
         update_account = cls.entity.accounts.delete(update_account_id)
         # Check if the delete was successful
         if update_account == 204:
             # Delete the Account entry from the Test Data
-            if 'update_account_success' in cls.data['accounts']:
-                del cls.data['accounts']['update_account_success']
+            if 'update_success_account' in cls.data['accounts']:
+                del cls.data['accounts']['update_success_account']
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
