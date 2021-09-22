@@ -4,13 +4,14 @@ D365API
 """
 
 from D365API.Access import Access
+from D365API.Entity import Entity
+from D365API.Constant import D365_API_V
 
-class D365API(object):
+class D365API(Entity):
     """D365API Object
 
     Main object for the Microsoft D365 (Dynamics 365) API (Application
     Programing Interface).
-
     """
 
     def __init__(self, hostname, client_id, client_secret, tenant_id):
@@ -23,18 +24,20 @@ class D365API(object):
             tenant_id (str): The Directory (tenant) ID of the application.
         """
 
-        self.hostname = hostname
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.tenant_id = tenant_id
-        self.version = 1
-        self.rest_v1_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/token'
-        self.resource = f'https://{hostname}.api.crm.dynamics.com/'
-        self.rest_v2_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token'
-        self.scope = f'https://{hostname}.api.crm.dynamics.com/.default'
-
         # Create an instance of Access object and login
-        access = Access(hostname=self.hostname,
-                        client_id=self.client_id,
-                        client_secret=self.client_secret,
-                        tenant_id=self.tenant_id).login()
+        access = Access(hostname=hostname,
+                        client_id=client_id,
+                        client_secret=client_secret,
+                        tenant_id=tenant_id).login()
+
+        # Set the root URL (Uniform Resource Locator)
+        self.root_url = f'https://{hostname}.api.crm.dynamics.com/api/data/v{D365_API_V}'
+
+        # Create header
+        self.header = {
+            'Authorization': 'Bearer ' + access,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept': 'application/json',
+            'OData-Version': '4.0',
+            'OData-MaxVersion': '4.0'
+        }
