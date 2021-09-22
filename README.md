@@ -6,7 +6,9 @@ Python Microsoft Dynamic 365 Application Programming Interface
 [python-version]: https://www.python.org/
 
 A basic Python REST API client built for Python 3.0+.
-This framework provide an integration to the [Microsoft Dynamics 365 Web API](https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/webapi/overview) resources.
+This framework provide an integration to the 
+[Microsoft Dataverse Web API](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/overview)
+resources.
 
 ## Table of Contents
 * [Quick Start](#quick-start)
@@ -68,7 +70,7 @@ entity = Entity(access_token, hostname)
 # Create the payload
 payload = {
     # Generate a random Account Name
-    "name": "Account-{}".format(random.randrange(10000, 99999))
+    'name': 'Account-{}'.format(random.randrange(10000, 99999))
 }
 
 # Make a request to create the Account
@@ -90,8 +92,8 @@ result = self.entity.accounts.read(account_id)
 # Create the payload
 payload = {
     # Generate a random Account Name
-    "name": "Account-{}".format(random.randrange(10000, 99999))
 }
+    'name': 'Account-{}'.format(random.randrange(10000, 99999))
 
 # Make a request to update the Account with unique identifier (ID)
 # Update the Account Name with the newly generated Account Name
@@ -110,7 +112,7 @@ result = self.entity.accounts.delete(account_id)
 ```python
 # Define the query property
 query = {
-    "select": "accountid,name"
+    'select': 'accountid,name'
 }
 
 # Make a request to query the Account
