@@ -19,14 +19,12 @@ class Access(object):
             tenant_id (str): The Directory (tenant) ID of the application.
         """
 
-        self.hostname = hostname
         self.client_id = client_id
         self.client_secret = client_secret
-        self.tenant_id = tenant_id
         self.version = 1
-        self.oauth_1_0_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/token'
+        self.oauth_1_0_url = f'https://login.microsoftonline.com/{tenant_id}/oauth2/token'
         self.resource = f'https://{hostname}.api.crm.dynamics.com/'
-        self.oath_2_0_url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token'
+        self.oath_2_0_url = f'https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token'
         self.scope = f'https://{hostname}.api.crm.dynamics.com/.default'
     
 
