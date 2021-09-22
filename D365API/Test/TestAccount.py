@@ -13,6 +13,7 @@ from D365API.Access import Access
 from D365API.Entity import Entity
 from D365API.Constant import TEST_FILE
 
+
 def setUpModule():
     """Set Up Module"""
     pass
@@ -214,7 +215,7 @@ class TestAccountRead(unittest.TestCase):
             json.dump(cls.data, f)
 
 
-    def test_account_read_failure(self):
+    def test_read_account_failure(self):
         """Test a failure of read Account.
 
         Get the hostname from the Test Data to make a request for read.
@@ -231,7 +232,7 @@ class TestAccountRead(unittest.TestCase):
         self.assertIsNone(account)
 
 
-    def test_account_read_success(self):
+    def test_read_account_success(self):
         """Test a success for read Account.
 
         Get the hostname from the Test Data to make a request for read.
@@ -249,7 +250,7 @@ class TestAccountRead(unittest.TestCase):
         self.assertEqual(type(read_account), list)
 
 
-    def test_account_read_count_success(self):
+    def test_read_account_count_success(self):
         """Test a success for read count Account.
 
         Get the hostname from the Test Data to make a request for read.
@@ -363,7 +364,7 @@ class TestAccountUpdate(unittest.TestCase):
             json.dump(cls.data, f)
 
 
-    def test_account_update_failure(self):
+    def test_update_account_failure(self):
         """Test a failure for Account update.
 
         Get the hostname from the Test Data and generate an incorrect
@@ -388,7 +389,7 @@ class TestAccountUpdate(unittest.TestCase):
         self.assertIsNone(update_account)
 
 
-    def test_account_update_success(self):
+    def test_update_account_success(self):
         """Test a success for Account update.
 
         Get the hostname from the Test Data and the generated a new
@@ -491,7 +492,7 @@ class TestAccountDelete(unittest.TestCase):
             json.dump(cls.data, f)
 
 
-    def test_account_delete_failure(self):
+    def test_delete_account_failure(self):
         """Test a failure for Account delete.
 
         Get the hostname and the unique identifier (ID) from the Test
@@ -510,7 +511,7 @@ class TestAccountDelete(unittest.TestCase):
         self.assertIsNone(delete_account)
 
 
-    def test_account_delete_success(self):
+    def test_delete_account_success(self):
         """Test a success for Account delete.
 
         Get the hostname and the unique identifier (ID) from the Test
@@ -584,7 +585,7 @@ class TestAccountQuery(unittest.TestCase):
         cls.entity = Entity(cls.access, cls.hostname)
 
 
-    def test_account_query_select_success(self):
+    def test_query_select_account_success(self):
         """Test a success for Account query `select`.
 
         Get the hostname from the Test Data to make a request for query.
@@ -605,7 +606,7 @@ class TestAccountQuery(unittest.TestCase):
         self.assertEqual(type(query_account), str)
 
 
-    def test_account_query_top_success(self):
+    def test_query_top_account_success(self):
         """Test a success for Account query `top`.
 
         Get the hostname from the Test Data to make a request for query.
@@ -660,6 +661,6 @@ def suite():
     return suite
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     runner.run(suite())
