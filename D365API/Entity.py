@@ -61,7 +61,7 @@ class Entity(object):
             A string for the unique identifier (ID) of the Entity.
         """
 
-        # Create the request URL
+        # Create request URL
         request_url = f'{self.root_url}/{self.label}'
 
         # Send the request for a response
@@ -96,10 +96,12 @@ class Entity(object):
         # Create a read result list to store all the read result
         read_result_list = []
 
-        # Create the request URL
+        # Create request URL
         if id is not None:
+            # Read a single record
             request_url = f'{self.root_url}/{self.label}({id})'
         else:
+            # Read all records
             request_url = f'{self.root_url}/{self.label}'
 
         # Send the request for a response
@@ -160,7 +162,7 @@ class Entity(object):
             An integer for the status code of the update request.
         """
 
-        # Create the request URL
+        # Create request URL
         request_url = f'{self.root_url}/{self.label}({id})'
 
         # Send the request for a response
@@ -187,7 +189,7 @@ class Entity(object):
             An integer for the status code of the delete request.
         """
 
-        # Create the request URL
+        # Create request URL
         request_url = f'{self.root_url}/{self.label}({id})'
 
         # Send the request for a response
@@ -203,21 +205,56 @@ class Entity(object):
         return None
 
 
-    def associate(self, src, dest):
+    def associate(self, primary_id, secondary, secondary_id, collection, update=False):
         """Associate Entity.
 
+        .. _Associate and Disassociate Table Rows Using The Web API
+        https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/associate-disassociate-entities-using-web-api
+
         Args:
-            src (str): The source unique identifier (ID) of the entity.
-            dest (str): The destination unique identifier (ID) of the
+            primary_id (str): The unique identifier (ID) of the primary
                 entity.
+            secondary (str): The secondary entity name.
+            secondary_id (str): The unique identifier (ID) of the
+                secondary entity.
+            collection (str): The collection to associate the entity to.
+            update (bool): Determine whether or not this is an update
+                operation to change the reference.
         """
-        pass
+
+        # Create request URL
+        request_url = f'{self.root_url}/{self.label}({primary_id})/{collection}/$ref'
+
+        # Create payload
+        if update:
+            # Change the reference in a single valued navigation property
+            payload = {
+                '@odata.id': f'{secondary}({secondary_id})'
+            }
+        else:
+            # Add a reference to a collection value navigation property
+            payload = {
+                '@odata.id': f'{self.root_url}/{secondary}({secondary_id})'
+            }
+
+        # Send the request for a response
+        r = requests.delete(url=request_url,
+                            headers=self.header,
+                            data=payload)
+
+        # Check the status code
+        if r.status_code == 204:
+            # Return the status code
+            return r.status_code
+
+        # There was an error
+        return None
 
 
     def query(self, **kwargs):
         """Query Entity.
 
-        .. _Query Data using the Web API:
+        .. _Query Data Using The Web API:
         https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/webapi/query-data-web-api
 
         .. _Web API Query Data Sample:
@@ -242,7 +279,7 @@ class Entity(object):
             # Build the query
             query = f"$top={kwargs['top']}"
 
-        # Create the request URL
+        # Create request URL
         request_url = f'{self.root_url}/{self.label}?{query}'
 
         # Send the request for a response
