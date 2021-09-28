@@ -205,7 +205,7 @@ class Entity(object):
         return None
 
 
-    def associate(self, primary_id, secondary, secondary_id, collection, update=False):
+    def associate(self, primary_id, collection, secondary, secondary_id, update=False):
         """Associate Entity.
 
         .. _Associate and Disassociate Table Rows Using The Web API
@@ -214,10 +214,10 @@ class Entity(object):
         Args:
             primary_id (str): The unique identifier (ID) of the primary
                 entity.
+            collection (str): The collection to associate the entity to.
             secondary (str): The secondary entity name.
             secondary_id (str): The unique identifier (ID) of the
                 secondary entity.
-            collection (str): The collection to associate the entity to.
             update (bool): Determine whether or not this is an update
                 operation to change the reference.
         """
@@ -238,9 +238,49 @@ class Entity(object):
             }
 
         # Send the request for a response
+        r = requests.post(url=request_url,
+                          headers=self.header,
+                          data=json.dumps(payload))
+
+        # Check the status code
+        if r.status_code == 204:
+            # Return the status code
+            return r.status_code
+
+        # There was an error
+        return None
+
+
+    def disassociate(self, primary_id, collection, collection_id=None, secondary=None, secondary_id=None):
+        """Disassociate Entity.
+
+        .. _Associate and Disassociate Table Rows Using The Web API
+        https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/associate-disassociate-entities-using-web-api
+
+        Args:
+            primary_id (str): The unique identifier (ID) of the primary
+                entity.
+            collection (str): The collection to associate the entity to.
+            collection_id (str): The unique identifier (ID) of the
+                collection entity.
+            secondary (str): The secondary entity name.
+            secondary_id (str): The unique identifier (ID) of the
+                secondary entity.
+        """
+
+        # Create request URL
+        if secondary and collection_id is None:
+            # Disassociate with primary and secondary entity
+            request_url = f'{self.root_url}/{self.label}({primary_id})/{collection}/$ref?$id={self.root_url}/{secondary}({secondary_id})'
+        elif collection_id and (secondary is None and secondary_id is None):
+            # Disassociate with primary and collection entity
+            request_url = f'{self.root_url}/{self.label}({primary_id})/{collection}({collection_id})'
+        else:
+            return None
+
+        # Send the request for a response
         r = requests.delete(url=request_url,
-                            headers=self.header,
-                            data=payload)
+                            headers=self.header)
 
         # Check the status code
         if r.status_code == 204:

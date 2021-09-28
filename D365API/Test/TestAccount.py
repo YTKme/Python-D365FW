@@ -6,6 +6,7 @@ D365API.TestAccount
 import requests
 import json
 import os
+import uuid
 import random
 import unittest
 
@@ -68,7 +69,7 @@ class TestAccountCreate(unittest.TestCase):
         response with status code 400 Bad Request.
         """
         
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account field
             'random': 'Random-{}'.format(random.randrange(10000, 99999))
@@ -91,7 +92,7 @@ class TestAccountCreate(unittest.TestCase):
         in response with status code 400 Bad Request.
         """
         
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account description
             'description': 'Description-{}'.format(random.randrange(10000, 99999))
@@ -113,7 +114,7 @@ class TestAccountCreate(unittest.TestCase):
         with status code 204 No Content.
         """
 
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account Name
             'name': 'Account-{}'.format(random.randrange(10000, 99999))
@@ -194,7 +195,7 @@ class TestAccountRead(unittest.TestCase):
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
 
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account Name
             'name': 'Account-{}'.format(random.randrange(10000, 99999))
@@ -343,7 +344,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
 
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account Name
             'name': 'Account-{}'.format(random.randrange(10000, 99999))
@@ -375,7 +376,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Get the read Account failure unique identifier (ID)
         update_account_id = self.data['accounts']['update_failure_account']['id']
 
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account Name
             'name': 'Account-{}'.format(random.randrange(10000, 99999))
@@ -400,7 +401,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Get the read Account success data
         update_account_id = self.data['accounts']['update_success_account']['id']
 
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account Name
             'name': 'Account-{}'.format(random.randrange(10000, 99999))
@@ -471,7 +472,7 @@ class TestAccountDelete(unittest.TestCase):
         # Create an instance of Entity
         cls.entity = Entity(cls.access, cls.hostname)
 
-        # Create the payload
+        # Create payload
         payload = {
             # Generate a random Account Name
             'name': 'Account-{}'.format(random.randrange(10000, 99999))
@@ -549,6 +550,250 @@ class TestAccountDelete(unittest.TestCase):
         pass
 
 
+class TestAccountAssociate(unittest.TestCase):
+    """Test the Entity module with Associate Account."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test set up class.
+
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
+        """
+
+        # Get the current directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, TEST_FILE)
+
+        # Open the file for reading
+        with open(cls.test_data_file, 'r') as f:
+            cls.data = json.load(f)
+
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data['organizations']['name']
+
+        # Get the user data for success login
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
+
+        # Create an instance of Access object and login
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+        # Generate a random number
+        random_number = random.randrange(10000, 99999)
+
+        # Create Account
+        # Create payload
+        payload = {
+            'name': f'Account-{random_number}'
+        }
+
+        # Make a request to create the Account
+        # Get the return unique identifier (ID)
+        # The payload need to be serialized to JSON formatted str (json.dumps)
+        cls.account_id = cls.entity.accounts.create(json.dumps(payload))
+
+        # Create Opportunity
+        # Create payload
+        payload = {
+            'name': f'Opportunity-{random_number}'
+        }
+
+        # Make a request to create the Opportunity
+        cls.opportunity_id = cls.entity.opportunities.create(json.dumps(payload))
+
+
+    def test_associate_account_opportunity_failure(self):
+        """Test a failure for associate Account to Opportunity.
+
+        Generate random Universally Unique IDentifier (UUID) for Account
+        and Opportunity to make a request to associate the two entity.
+        Should result in a response with None.
+        """
+
+        # Generate a random UUID for Account
+        random_account_id = uuid.uuid4()
+        # Generate a random UUID for Opportunity
+        random_opportunity_id = uuid.uuid4()
+
+        # Make a request to associate Account and Opportunity
+        associate_account = self.entity.accounts.associate(primary_id=random_account_id,
+                                                           collection='opportunity_customer_accounts',
+                                                           secondary='opportunities',
+                                                           secondary_id=random_opportunity_id)
+
+        # Test to ensure associate Account information is None
+        self.assertIsNone(associate_account)
+
+
+    def test_associate_account_opportunity_success(self):
+        """Test a success for associate Account to Opportunity.
+
+        Get the unique identifier (ID) for Account and Opportunity to
+        make a request to associate the two entity. Should result in a
+        response with status code 204 No Content.
+        """
+
+        # Make a request to associate Account and Opportunity
+        associate_account = self.entity.accounts.associate(primary_id=self.account_id,
+                                                           collection='opportunity_customer_accounts',
+                                                           secondary='opportunities',
+                                                           secondary_id=self.opportunity_id)
+
+        # Test to ensure HTTP status code is 204 No Content
+        self.assertEqual(associate_account, 204)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+
+        # Make a request to disassociate Account and Opportunity
+        cls.entity.accounts.disassociate(primary_id=cls.account_id,
+                                         collection='opportunity_customer_accounts',
+                                         secondary='opportunities',
+                                         secondary_id=cls.opportunity_id)
+
+        # Make a request to delete the Account
+        cls.entity.accounts.delete(cls.account_id)
+        # Make a request to delete the Opportunity
+        cls.entity.opportunities.delete(cls.opportunity_id)
+
+
+class TestAccountDisassociate(unittest.TestCase):
+    """Test the Entity module with Disassociate Account."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Prepare test set up class.
+
+        Get the data from JSON (JavaScript Object Notation) file and
+        login.
+        """
+
+        # Get the current directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        # Get the path of the Test Data file
+        cls.test_data_file = os.path.join(current_directory, TEST_FILE)
+
+        # Open the file for reading
+        with open(cls.test_data_file, 'r') as f:
+            cls.data = json.load(f)
+
+        # Get the hostname from the Test Data
+        cls.hostname = cls.data['organizations']['name']
+
+        # Get the user data for success login
+        oauth_1_0_user_success = cls.data['systemusers']['oauth_1_0_user_success']
+
+        # Create an instance of Access object and login
+        cls.access = Access(hostname=cls.hostname,
+                            client_id=oauth_1_0_user_success['client_id'],
+                            client_secret=oauth_1_0_user_success['client_secret'],
+                            tenant_id=oauth_1_0_user_success['tenant_id']).login()
+
+        # Create an instance of Entity
+        cls.entity = Entity(cls.access, cls.hostname)
+
+        # Generate a random number
+        random_number = random.randrange(10000, 99999)
+
+        # Create Account
+        # Create payload
+        payload = {
+            'name': f'Account-{random_number}'
+        }
+
+        # Make a request to create the Account
+        # Get the return unique identifier (ID)
+        # The payload need to be serialized to JSON formatted str (json.dumps)
+        cls.account_id = cls.entity.accounts.create(json.dumps(payload))
+
+        # Create Opportunity
+        # Create payload
+        payload = {
+            'name': f'Opportunity-{random_number}'
+        }
+
+        # Make a request to create the Opportunity
+        cls.opportunity_id = cls.entity.opportunities.create(json.dumps(payload))
+
+        # Make a request to associate Account and Opportunity
+        cls.entity.accounts.associate(primary_id=cls.account_id,
+                                      collection='opportunity_customer_accounts',
+                                      secondary='opportunities',
+                                      secondary_id=cls.opportunity_id)
+
+
+    def test_disassociate_account_opportunity_failure(self):
+        """Test a failure for disassociate Account to Opportunity.
+
+        Generate random Universally Unique IDentifier (UUID) for Account
+        and Opportunity to make a request to disassociate the two
+        entity. Should result in a response with None.
+        """
+
+        # Generate a random UUID for Account
+        random_account_id = uuid.uuid4()
+        # Generate a random UUID for Opportunity
+        random_opportunity_id = uuid.uuid4()
+
+        # Make a request to disassociate Account and Opportunity
+        disassociate_account = self.entity.accounts.disassociate(primary_id=random_account_id,
+                                                                 collection='opportunity_customer_accounts',
+                                                                 secondary='opportunities',
+                                                                 secondary_id=random_opportunity_id)
+
+        # Test to ensure disassociate Account information is None
+        self.assertIsNone(disassociate_account)
+
+
+    def test_disassociate_account_opportunity_success(self):
+        """Test a success for disassociate Account to Opportunity.
+
+        Get the unique identifier (ID) for Account and Opportunity to
+        make a request to disassociate the two entity. Should result in
+        a response with status code 204 No Content.
+        """
+
+        # Make a request to disassociate Account and Opportunity
+        disassociate_account = self.entity.accounts.disassociate(primary_id=self.account_id,
+                                                                 collection='opportunity_customer_accounts',
+                                                                 secondary='opportunities',
+                                                                 secondary_id=self.opportunity_id)
+
+        # Test to ensure HTTP status code is 204 No Content
+        self.assertEqual(disassociate_account, 204)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """Prepare test tear down class.
+
+        Clean up Test Data.
+        """
+
+        # Make a request to disassociate Account and Opportunity
+        cls.entity.accounts.disassociate(primary_id=cls.account_id,
+                                         collection='opportunity_customer_accounts',
+                                         secondary='opportunities',
+                                         secondary_id=cls.opportunity_id)
+
+        # Make a request to delete the Account
+        cls.entity.accounts.delete(cls.account_id)
+        # Make a request to delete the Opportunity
+        cls.entity.opportunities.delete(cls.opportunity_id)
+
+
 class TestAccountQuery(unittest.TestCase):
     """Test the Entity module with Query Account."""
 
@@ -594,7 +839,7 @@ class TestAccountQuery(unittest.TestCase):
         the result of the query.
         """
 
-        # Define the query property
+        # Define query property
         query = {
             'select': 'accountid,name'
         }
@@ -618,7 +863,7 @@ class TestAccountQuery(unittest.TestCase):
         # Set the `top` system query option count
         top_count = 3
         
-        # Define the query property
+        # Define query property
         query = {
             'top': top_count
         }
@@ -655,6 +900,7 @@ def suite():
     suite.addTest(TestAccountRead())
     suite.addTest(TestAccountUpdate())
     suite.addTest(TestAccountDelete())
+    suite.addTest(TestAccountAssociate())
     suite.addTest(TestAccountQuery())
 
     # Return the Test Suite
