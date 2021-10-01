@@ -204,16 +204,7 @@ class TestAccountRead(unittest.TestCase):
         # Make a request to create the Account
         # Get the return unique identifier (ID)
         # The payload need to be serialized to JSON formatted str (json.dumps)
-        account_id = cls.entity.accounts.create(json.dumps(payload))
-
-        # Create the dictionary
-        cls.data['accounts']['read_success_account'] = {}
-        # Create or update the Account ID in the Test Data
-        cls.data['accounts']['read_success_account']['id'] = account_id
-
-        # Write the new Test Data to file
-        with open(cls.test_data_file, 'w') as f:
-            json.dump(cls.data, f)
+        cls.account_id = cls.entity.accounts.create(json.dumps(payload))
 
 
     def test_read_account_failure(self):
@@ -242,7 +233,7 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the Account unique identifier (ID) from Test Data
-        read_account_id = self.data['accounts']['read_success_account']['id']
+        read_account_id = self.account_id
 
         # Make a request to read the Account
         read_account = self.entity.accounts.read(read_account_id)
@@ -295,18 +286,9 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Get the read Account success unique identifier (ID)
-        read_account_id = cls.data['accounts']['read_success_account']['id']
+        read_account_id = cls.account_id
         # Make a request to delete the Account
-        read_account = cls.entity.accounts.delete(read_account_id)
-        # Check if the delete was successful
-        if read_account == 204:
-            # Delete the Account entry from the Test Data
-            if 'read_success_account' in cls.data['accounts']:
-                del cls.data['accounts']['read_success_account']
-
-        # Write the new Test Data to file
-        with open(cls.test_data_file, 'w') as f:
-            json.dump(cls.data, f)
+        cls.entity.accounts.delete(read_account_id)
 
 
 class TestAccountUpdate(unittest.TestCase):
