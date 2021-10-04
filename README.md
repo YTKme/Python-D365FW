@@ -32,8 +32,9 @@ or
 pip install D365API
 ```
 
+Import the module
+
 ```python
-# Import the module
 from D365API.D365API import D365API
 ```
 
@@ -51,7 +52,52 @@ valid credentials to login to the system.
 ```python
 # Create an instance of D365API object and login
 d365api = D365API(hostname=hostname,
-                    client_id=client_id,
-                    client_secret=client_secret,
-                    tenant_id=tenant_id)
+                  client_id=client_id,
+                  client_secret=client_secret,
+                  tenant_id=tenant_id)
+```
+
+## Usage
+
+### Create
+
+```python
+# Create payload
+payload = {
+    # Account Name
+    'name': f'Microsoft Dynamics'
+}
+
+# Make a request to create the Account
+# Get the return unique identifier (ID)
+# The payload need to be serialized to JSON formatted str (json.dumps)
+account_id = d365api.accounts.create(json.dumps(payload))
+```
+
+### Read
+
+```python
+# Make a request to read the Account
+read_account = d365api.accounts.read(account_id)
+```
+
+### Update
+
+```python
+# Create payload
+payload = {
+    # Account Name
+    'name': f'Power Platform'
+}
+
+# Make a request to update the Account with unique identifier (ID)
+# Update the Account Name with the newly generated Account Name
+update_account = d365api.accounts.update(account_id, json.dumps(payload))
+```
+
+### Delete
+
+```python
+# Make a request to delete the Account with unique identifier (ID)
+delete_account = d365api.accounts.delete(account_id)
 ```
