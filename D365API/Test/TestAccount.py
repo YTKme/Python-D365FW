@@ -33,7 +33,7 @@ class TestAccountCreate(unittest.TestCase):
         """Prepare test set up class.
 
         Get the data from JSON (JavaScript Object Notation) file and
-        login.
+        login. Initialize any prerequisite.
         """
 
         # Get the current directory of the file
@@ -168,7 +168,7 @@ class TestAccountRead(unittest.TestCase):
         """Prepare test set up class.
 
         Get the data from JSON (JavaScript Object Notation) file and
-        login.
+        login. Initialize any prerequisite.
         """
 
         # Get the current directory of the file
@@ -210,12 +210,12 @@ class TestAccountRead(unittest.TestCase):
     def test_read_account_failure(self):
         """Test a failure of read Account.
 
-        Get the hostname from the Test Data to make a request for read.
-        Should result in response with None.
+        Generate a random Universally Unique IDentifier (UUID) to make a
+        request for read. Should result in response with None.
         """
 
-        # Get the read Account failure unique identifier (ID)
-        read_account_id = self.data['accounts']['read_failure_account']['id']
+        # Generate a random UUID
+        read_account_id = uuid.uuid4()
 
         # Make a request to read the Account with unique identifier (ID)
         account = self.entity.accounts.read(read_account_id)
@@ -241,7 +241,7 @@ class TestAccountRead(unittest.TestCase):
         # Test to ensure Account information is a string
         self.assertEqual(type(read_account), list)
 
-
+    @unittest.expectedFailure
     def test_read_account_count_success(self):
         """Test a success for read count Account.
 
@@ -285,10 +285,8 @@ class TestAccountRead(unittest.TestCase):
         Clean up Test Data.
         """
 
-        # Get the read Account success unique identifier (ID)
-        read_account_id = cls.account_id
         # Make a request to delete the Account
-        cls.entity.accounts.delete(read_account_id)
+        cls.entity.accounts.delete(cls.account_id)
 
 
 class TestAccountUpdate(unittest.TestCase):
@@ -335,28 +333,19 @@ class TestAccountUpdate(unittest.TestCase):
         # Make a request to create the Account
         # Get the return unique identifier (ID)
         # The payload need to be serialized to JSON formatted str (json.dumps)
-        account_id = cls.entity.accounts.create(json.dumps(payload))
-
-        # Create the dictionary
-        cls.data['accounts']['update_success_account'] = {}
-        # Create or update the Account ID in the Test Data
-        cls.data['accounts']['update_success_account']['id'] = account_id
-
-        # Write the new Test Data to file
-        with open(cls.test_data_file, 'w') as f:
-            json.dump(cls.data, f)
+        cls.account_id = cls.entity.accounts.create(json.dumps(payload))
 
 
     def test_update_account_failure(self):
         """Test a failure for Account update.
 
-        Get the hostname from the Test Data and generate an incorrect
-        Account Name to make a request for update. Should result in
-        response with None.
+        Generate a random Universally Unique IDentifier (UUID) and an
+        incorrect Account Name to make a request for update. Should
+        result in response with None.
         """
 
-        # Get the read Account failure unique identifier (ID)
-        update_account_id = self.data['accounts']['update_failure_account']['id']
+        # Generate a random UUID
+        update_account_id = uuid.uuid4()
 
         # Create payload
         payload = {
@@ -380,9 +369,6 @@ class TestAccountUpdate(unittest.TestCase):
         response with status code 204 No Content.
         """
 
-        # Get the read Account success data
-        update_account_id = self.data['accounts']['update_success_account']['id']
-
         # Create payload
         payload = {
             # Generate a random Account Name
@@ -391,7 +377,7 @@ class TestAccountUpdate(unittest.TestCase):
 
         # Make a request to update the Account with unique identifier (ID)
         # Update the Account Name with the newly generated Account Name
-        update_account = self.entity.accounts.update(update_account_id, json.dumps(payload))
+        update_account = self.entity.accounts.update(self.account_id, json.dumps(payload))
 
         # Test to ensure HTTP status code is 204 No Content
         self.assertEqual(update_account, 204)
@@ -404,19 +390,8 @@ class TestAccountUpdate(unittest.TestCase):
         Clean up Test Data.
         """
 
-        # Get the read Account success unique identifier (ID)
-        update_account_id = cls.data['accounts']['update_success_account']['id']
         # Make a request to delete the Account
-        update_account = cls.entity.accounts.delete(update_account_id)
-        # Check if the delete was successful
-        if update_account == 204:
-            # Delete the Account entry from the Test Data
-            if 'update_success_account' in cls.data['accounts']:
-                del cls.data['accounts']['update_success_account']
-
-        # Write the new Test Data to file
-        with open(cls.test_data_file, 'w') as f:
-            json.dump(cls.data, f)
+        cls.entity.accounts.delete(cls.account_id)
 
 
 class TestAccountDelete(unittest.TestCase):
@@ -463,28 +438,18 @@ class TestAccountDelete(unittest.TestCase):
         # Make a request to create the Account
         # Get the return unique identifier (ID)
         # The payload need to be serialized to JSON formatted str (json.dumps)
-        account_id = cls.entity.accounts.create(json.dumps(payload))
-
-        # Create the dictionary
-        cls.data['accounts']['delete_success_account'] = {}
-        # Create or update the Account ID in the Test Data
-        cls.data['accounts']['delete_success_account']['id'] = account_id
-
-        # Write the new Test Data to file
-        with open(cls.test_data_file, 'w') as f:
-            json.dump(cls.data, f)
+        cls.account_id = cls.entity.accounts.create(json.dumps(payload))
 
 
     def test_delete_account_failure(self):
         """Test a failure for Account delete.
 
-        Get the hostname and the unique identifier (ID) from the Test
-        Data to make a request for delete. Should result in response
-        with None.
+        Generate a random Universally Unique IDentifier (UUID) to make a
+        request for delete. Should result in response with None.
         """
 
-        # Get the delete Account failure unique identifier (ID)
-        delete_account_id = self.data['accounts']['delete_failure_account']['id']
+        # Generate a random UUID
+        delete_account_id = uuid.uuid4()
 
         # Make a request to delete the Account with unique identifier (ID)
         # Delete the Account
@@ -502,20 +467,8 @@ class TestAccountDelete(unittest.TestCase):
         with status code 204 No Content.
         """
 
-        # Get the delete Account success unique identifier (ID)
-        delete_account_id = self.data['accounts']['delete_success_account']['id']
-
         # Make a request to delete the Account with unique identifier (ID)
-        # Delete the Account
-        delete_account = self.entity.accounts.delete(delete_account_id)
-
-        # Delete the Account entry from the Test Data
-        if 'delete_success_account' in self.data['accounts']:
-            del self.data['accounts']['delete_success_account']
-
-        # Write the new Test Data to file
-        with open(self.test_data_file, 'w') as f:
-            json.dump(self.data, f)
+        delete_account = self.entity.accounts.delete(self.account_id)
 
         # Test to ensure HTTP status code is 204 No Content
         self.assertEqual(delete_account, 204)
@@ -528,8 +481,8 @@ class TestAccountDelete(unittest.TestCase):
         Clean up Test Data.
         """
 
-        # No need clean up because is already done
-        pass
+        # Make a request to delete the Account
+        cls.entity.accounts.delete(cls.account_id)
 
 
 class TestAccountAssociate(unittest.TestCase):

@@ -17,17 +17,5 @@
         }
     },
     "accounts": {
-        "read_failure_account": {
-            "id": "<read_failure_account_id>"
-        },
-        "update_failure_account": {
-            "id": "<update_failure_account_id>"
-        },
-        "delete_failure_account": {
-            "id": "<delete_failure_account_id>"
-        },
-        "create_success_account": {
-            "id": "<create_success_account_id>"
-        }
     }
 }
