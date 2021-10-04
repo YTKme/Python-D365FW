@@ -43,7 +43,7 @@ class TestD365APIGeneral(unittest.TestCase):
         # Get the read Account failure unique identifier (ID)
         read_account_id = 'af2e07f6-fa17-ec11-b6e6-000d3a9b2012'
 
-        # Create an instance of Access object and login
+        # Create an instance of D365API object and login
         d365api = D365API(hostname=hostname,
                           client_id=oauth_1_0_user_success['client_id'],
                           client_secret=oauth_1_0_user_success['client_secret'],
