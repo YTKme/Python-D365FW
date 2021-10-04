@@ -165,6 +165,10 @@ class Entity(object):
         # Create request URL
         request_url = f'{self.root_url}/{self.label}({id})'
 
+        # Update header
+        # Don't perform create for this update
+        self.header['If-Match'] = '*'
+
         # Send the request for a response
         r = requests.patch(url=request_url,
                            headers=self.header,
@@ -177,6 +181,13 @@ class Entity(object):
 
         # There was an error
         return None
+
+
+    def upsert(self, id, payload, option=None):
+        """Upsert Entity.
+        """
+
+        # TODO: Implementation
 
 
     def delete(self, id):
