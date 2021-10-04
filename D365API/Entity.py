@@ -324,11 +324,23 @@ class Entity(object):
         # If the `select` system query option is specified
         if 'select' in kwargs:
             # Build the query
-            query = f"$select={kwargs['select']}"
+            query += f"$select={kwargs['select']}"
         # If the `top` system query option is specified
         if 'top' in kwargs:
             # Build the query
-            query = f"$top={kwargs['top']}"
+            query += f"$top={kwargs['top']}"
+        # If the `filter` system query option is specified
+        if 'filter' in kwargs:
+            # Build the query
+            query += f"$filter={kwargs['filter']}"
+        # If the `orderby` system query option is specified
+        if 'orderby' in kwargs:
+            # Build the query
+            query += f"$orderby={kwargs['orderby']}"
+        # If the `count` system query option is specified
+        if 'count' in kwargs:
+            # Build the query
+            query += f"$count={kwargs['count']}"
 
         # Create request URL
         request_url = f'{self.root_url}/{self.label}?{query}'
