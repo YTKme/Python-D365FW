@@ -232,11 +232,8 @@ class TestAccountRead(unittest.TestCase):
         formatted JSON for the result of the read.
         """
 
-        # Get the Account unique identifier (ID) from Test Data
-        read_account_id = self.account_id
-
         # Make a request to read the Account
-        read_account = self.entity.accounts.read(read_account_id)
+        read_account = self.entity.accounts.read(self.account_id)
 
         # Test to ensure Account information is a string
         self.assertEqual(type(read_account), list)
