@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # Read the contents of the README.md file
 from pathlib import Path
 current_directory = Path(__file__).parent
-long_description = (current_directory / 'README.md').read_text()
+long_description = (current_directory/'README.md').read_text()
 
 setup(
     name = "d365api",
