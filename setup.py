@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "D365API",
-    version = "0.7.1",
+    name = "d365api",
+    version = "0.7.2",
     packages = find_packages(),
 
     # Dependency
@@ -15,5 +15,5 @@ setup(
     author_email = "YTKme@Outlook.com",
     description = "Microsoft Dynamics 365 Application Programming Interface.",
     license = "GNU GENERAL PUBLIC LICENSE",
-    keywords = "Microsoft Dynamics 365"
+    keywords = "dynamics d365 api microsoft"
 )
