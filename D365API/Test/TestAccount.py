@@ -126,9 +126,9 @@ class TestAccountCreate(unittest.TestCase):
         create_account_id = self.entity.accounts.create(json.dumps(payload))
 
         # Create the dictionary
-        self.data['accounts']['create_success_account'] = {}
+        self.data['accounts']['create_account_success'] = {}
         # Create or update the Account ID in the Test Data
-        self.data['accounts']['create_success_account']['id'] = create_account_id
+        self.data['accounts']['create_account_success']['id'] = create_account_id
 
         # Write the new Test Data to file
         with open(self.test_data_file, 'w') as f:
@@ -146,14 +146,14 @@ class TestAccountCreate(unittest.TestCase):
         """
 
         # Get the create Account success unique identifier (ID)
-        create_account_id = cls.data['accounts']['create_success_account']['id']
+        create_account_id = cls.data['accounts']['create_account_success']['id']
         # Make a request to delete the Account
         create_account = cls.entity.accounts.delete(create_account_id)
         # Check if the delete was successful
         if create_account == 204:
             # Delete the Account entry from the Test Data
             if 'create_success_account' in cls.data['accounts']:
-                del cls.data['accounts']['create_success_account']
+                del cls.data['accounts']['create_account_success']
 
         # Write the new Test Data to file
         with open(cls.test_data_file, 'w') as f:
