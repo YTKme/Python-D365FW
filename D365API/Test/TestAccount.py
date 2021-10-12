@@ -200,7 +200,7 @@ class TestAccountRead(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account Name
-            'name': 'Account-{}'.format(random.randrange(10000, 99999))
+            'name': f'Account-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to create the Account
