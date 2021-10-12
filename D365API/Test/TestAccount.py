@@ -285,7 +285,7 @@ class TestAccountRead(unittest.TestCase):
         """
 
         # Make a request to delete the Account
-        cls.entity.accounts.delete(cls.account_id)
+        _ = cls.entity.accounts.delete(cls.account_id)
 
 
 class TestAccountUpdate(unittest.TestCase):
@@ -390,7 +390,7 @@ class TestAccountUpdate(unittest.TestCase):
         """
 
         # Make a request to delete the Account
-        cls.entity.accounts.delete(cls.account_id)
+        _ = cls.entity.accounts.delete(cls.account_id)
 
 
 class TestAccountDelete(unittest.TestCase):
@@ -481,7 +481,7 @@ class TestAccountDelete(unittest.TestCase):
         """
 
         # Make a request to delete the Account
-        cls.entity.accounts.delete(cls.account_id)
+        _ = cls.entity.accounts.delete(cls.account_id)
 
 
 class TestAccountAssociate(unittest.TestCase):
@@ -590,15 +590,15 @@ class TestAccountAssociate(unittest.TestCase):
         """
 
         # Make a request to disassociate Account and Opportunity
-        cls.entity.accounts.disassociate(primary_id=cls.account_id,
-                                         collection='opportunity_customer_accounts',
-                                         secondary='opportunities',
-                                         secondary_id=cls.opportunity_id)
+        _ = cls.entity.accounts.disassociate(primary_id=cls.account_id,
+                                             collection='opportunity_customer_accounts',
+                                             secondary='opportunities',
+                                             secondary_id=cls.opportunity_id)
 
         # Make a request to delete the Account
-        cls.entity.accounts.delete(cls.account_id)
+        _ = cls.entity.accounts.delete(cls.account_id)
         # Make a request to delete the Opportunity
-        cls.entity.opportunities.delete(cls.opportunity_id)
+        _ = cls.entity.opportunities.delete(cls.opportunity_id)
 
 
 class TestAccountDisassociate(unittest.TestCase):
@@ -713,15 +713,15 @@ class TestAccountDisassociate(unittest.TestCase):
         """
 
         # Make a request to disassociate Account and Opportunity
-        cls.entity.accounts.disassociate(primary_id=cls.account_id,
-                                         collection='opportunity_customer_accounts',
-                                         secondary='opportunities',
-                                         secondary_id=cls.opportunity_id)
+        _ = cls.entity.accounts.disassociate(primary_id=cls.account_id,
+                                             collection='opportunity_customer_accounts',
+                                             secondary='opportunities',
+                                             secondary_id=cls.opportunity_id)
 
         # Make a request to delete the Account
-        cls.entity.accounts.delete(cls.account_id)
+        _ = cls.entity.accounts.delete(cls.account_id)
         # Make a request to delete the Opportunity
-        cls.entity.opportunities.delete(cls.opportunity_id)
+        _ = cls.entity.opportunities.delete(cls.opportunity_id)
 
 
 class TestAccountQuery(unittest.TestCase):
