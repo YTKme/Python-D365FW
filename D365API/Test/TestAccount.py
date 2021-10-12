@@ -3,12 +3,12 @@ D365API.TestAccount
 ~~~~~~~~~~~~~~~~~~~
 """
 
-import requests
 import json
 import os
 import uuid
 import random
 import unittest
+import requests
 
 from D365API.Access import Access
 from D365API.Entity import Entity
@@ -72,7 +72,7 @@ class TestAccountCreate(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account field
-            'random': 'Random-{}'.format(random.randrange(10000, 99999))
+            'random': f'Random-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to create the Account with random field
@@ -95,7 +95,7 @@ class TestAccountCreate(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account description
-            'description': 'Description-{}'.format(random.randrange(10000, 99999))
+            'description': f'Description-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to create the Account with random description
@@ -117,7 +117,7 @@ class TestAccountCreate(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account Name
-            'name': 'Account-{}'.format(random.randrange(10000, 99999))
+            'name': f'Account-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to create the Account
@@ -254,7 +254,7 @@ class TestAccountRead(unittest.TestCase):
 
         # Create header
         header = {
-            'Authorization': 'Bearer ' + self.access,
+            'Authorization': f'Bearer {self.access}',
             'Content-Type': 'application/json; charset=utf-8',
             'Accept': 'application/json',
             'OData-Version': '4.0',
@@ -324,7 +324,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account Name
-            'name': 'Account-{}'.format(random.randrange(10000, 99999))
+            'name': f'Account-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to create the Account
@@ -347,7 +347,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account Name
-            'name': 'Account-{}'.format(random.randrange(10000, 99999))
+            'name': f'Account-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to update the Account with the incorrect unique identifier (ID)
@@ -369,7 +369,7 @@ class TestAccountUpdate(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account Name
-            'name': 'Account-{}'.format(random.randrange(10000, 99999))
+            'name': f'Account-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to update the Account with unique identifier (ID)
@@ -429,7 +429,7 @@ class TestAccountDelete(unittest.TestCase):
         # Create payload
         payload = {
             # Generate a random Account Name
-            'name': 'Account-{}'.format(random.randrange(10000, 99999))
+            'name': f'Account-{random.randrange(10000, 99999)}'
         }
 
         # Make a request to create the Account
@@ -520,8 +520,7 @@ class TestAccountAssociate(unittest.TestCase):
         # Generate a random number
         random_number = random.randrange(10000, 99999)
 
-        # Create Account
-        # Create payload
+        # Create Account using payload
         payload = {
             'name': f'Account-{random_number}'
         }
@@ -531,8 +530,7 @@ class TestAccountAssociate(unittest.TestCase):
         # The payload need to be serialized to JSON formatted str (json.dumps)
         cls.account_id = cls.entity.accounts.create(json.dumps(payload))
 
-        # Create Opportunity
-        # Create payload
+        # Create Opportunity using payload
         payload = {
             'name': f'Opportunity-{random_number}'
         }
@@ -639,8 +637,7 @@ class TestAccountDisassociate(unittest.TestCase):
         # Generate a random number
         random_number = random.randrange(10000, 99999)
 
-        # Create Account
-        # Create payload
+        # Create Account using payload
         payload = {
             'name': f'Account-{random_number}'
         }
@@ -650,8 +647,7 @@ class TestAccountDisassociate(unittest.TestCase):
         # The payload need to be serialized to JSON formatted str (json.dumps)
         cls.account_id = cls.entity.accounts.create(json.dumps(payload))
 
-        # Create Opportunity
-        # Create payload
+        # Create Opportunity using payload
         payload = {
             'name': f'Opportunity-{random_number}'
         }
