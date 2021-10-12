@@ -15,7 +15,5 @@
             "client_secret": "<failure_client_secret>",
             "tenant_id": "<failure_tenant_id>"
         }
-    },
-    "accounts": {
     }
 }

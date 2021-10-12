@@ -125,7 +125,8 @@ class TestAccountCreate(unittest.TestCase):
         # The payload need to be serialized to JSON formatted str (json.dumps)
         create_account_id = self.entity.accounts.create(json.dumps(payload))
 
-        # Create the dictionary
+        # Create the dictionary for Account data
+        self.data['accounts'] = {}
         self.data['accounts']['create_account_success'] = {}
         # Create or update the Account ID in the Test Data
         self.data['accounts']['create_account_success']['id'] = create_account_id
@@ -145,19 +146,20 @@ class TestAccountCreate(unittest.TestCase):
         Clean up Test Data.
         """
 
-        # Get the create Account success unique identifier (ID)
-        create_account_id = cls.data['accounts']['create_account_success']['id']
-        # Make a request to delete the Account
-        create_account = cls.entity.accounts.delete(create_account_id)
-        # Check if the delete was successful
-        if create_account == 204:
-            # Delete the Account entry from the Test Data
-            if 'create_success_account' in cls.data['accounts']:
-                del cls.data['accounts']['create_account_success']
+        # Check if Account data exist
+        if 'accounts' in cls.data:
+            # Get the create Account success unique identifier (ID)
+            create_account_id = cls.data['accounts']['create_account_success']['id']
+            # Make a request to delete the Account
+            create_account = cls.entity.accounts.delete(create_account_id)
+            # Check if the delete was successful
+            if create_account == 204:
+                # Delete the Account entry from the Test Data
+                del cls.data['accounts']
 
-        # Write the new Test Data to file
-        with open(cls.test_data_file, 'w') as f:
-            json.dump(cls.data, f)
+            # Write the new Test Data to file
+            with open(cls.test_data_file, 'w') as f:
+                json.dump(cls.data, f)
 
 
 class TestAccountRead(unittest.TestCase):
