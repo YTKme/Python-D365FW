@@ -23,13 +23,13 @@ resources.
 D365API can be installed with
 
 ```bash
-python -m pip install D365API
+python -m pip install d365api
 ```
 
 or
 
 ```bash
-pip install D365API
+pip install d365api
 ```
 
 Import the module
