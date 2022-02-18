@@ -318,6 +318,8 @@ class Entity(object):
             A string formatted JSON for the result of the query.
         """
 
+        # TODO: Fix function for multiple query
+
         # Initialize query
         query = ''
 
@@ -341,6 +343,10 @@ class Entity(object):
         if 'count' in kwargs:
             # Build the query
             query += f"$count={kwargs['count']}"
+        # If the `fetchXml` system query option is specified
+        if 'fetchXml' in kwargs:
+            # Build the query
+            query += f"fetchXml={kwargs['fetchXml']}"
 
         # Create request URL
         request_url = f'{self.root_url}/{self.label}?{query}'

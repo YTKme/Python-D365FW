@@ -7,7 +7,7 @@ long_description = (current_directory/'README.md').read_text()
 
 setup(
     name = 'd365api',
-    version = '0.7.4',
+    version = '0.7.5',
     packages = find_packages(),
 
     # Dependency
