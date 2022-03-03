@@ -4,7 +4,7 @@ D365API.Entity
 """
 
 import json
-from urllib.parse import urlparse
+from urllib.parse import urlencode
 import requests
 
 from D365API.Constant import D365_API_V
@@ -318,35 +318,13 @@ class Entity(object):
             A string formatted JSON for the result of the query.
         """
 
-        # TODO: Fix function for multiple query
-
         # Initialize query
         query = ''
+        # query = urlencode(kwargs, safe='$,')
 
-        # If the `select` system query option is specified
-        if 'select' in kwargs:
-            # Build the query
-            query += f"$select={kwargs['select']}"
-        # If the `top` system query option is specified
-        if 'top' in kwargs:
-            # Build the query
-            query += f"$top={kwargs['top']}"
-        # If the `filter` system query option is specified
-        if 'filter' in kwargs:
-            # Build the query
-            query += f"$filter={kwargs['filter']}"
-        # If the `orderby` system query option is specified
-        if 'orderby' in kwargs:
-            # Build the query
-            query += f"$orderby={kwargs['orderby']}"
-        # If the `count` system query option is specified
-        if 'count' in kwargs:
-            # Build the query
-            query += f"$count={kwargs['count']}"
-        # If the `fetchXml` system query option is specified
-        if 'fetchXml' in kwargs:
-            # Build the query
-            query += f"fetchXml={kwargs['fetchXml']}"
+        # Build query
+        # Loop through `kwargs` parameter(s)
+        query = '&'.join(f'${key}={value}' for key, value in kwargs.items())
 
         # Create request URL
         request_url = f'{self.root_url}/{self.label}?{query}'
