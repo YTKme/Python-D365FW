@@ -34,6 +34,7 @@ jobs:
         .
     
     - name: Publish distribution 📦 to Test PyPI
+      if: startsWith(github.ref, 'refs/heads/development')
       uses: pypa/gh-action-pypi-publish@master
       with:
         password: ${{ secrets.PYPI_TEST_D365API }}
