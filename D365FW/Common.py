@@ -1,6 +1,6 @@
 """
-D365API.Common
-~~~~~~~~~~~~~~
+D365FW.Common
+~~~~~~~~~~~~~
 """
 
 import re
