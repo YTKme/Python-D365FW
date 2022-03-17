@@ -2,7 +2,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        "./D365API/Test",
+        "./D365FW/Test",
         "-p",
         "*Test*.py"
     ]

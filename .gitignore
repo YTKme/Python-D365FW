@@ -193,4 +193,4 @@ dmypy.json
 .pyre/
 
 # Test Data
-D365API/Test/TestData.json
+D365FW/Test/TestData.json

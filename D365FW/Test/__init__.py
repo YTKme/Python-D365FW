@@ -4,7 +4,7 @@ Test
 """
 
 import unittest
-from D365API.Test.TestAccess import TestAccess
+from D365FW.Test.TestAccess import TestAccess
 
 def load_tests(loader, tests, pattern):
     """

@@ -1,6 +1,6 @@
 """
-D365API.TestAccount
-~~~~~~~~~~~~~~~~~~~
+D365FW.TestAccount
+~~~~~~~~~~~~~~~~~~
 """
 
 import json
@@ -10,9 +10,9 @@ import random
 import unittest
 import requests
 
-from D365API.Access import Access
-from D365API.Entity import Entity
-from D365API.Constant import TEST_FILE
+from D365FW.Access import Access
+from D365FW.Entity import Entity
+from D365FW.Constant import TEST_FILE
 
 
 def setUpModule():

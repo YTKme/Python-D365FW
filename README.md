@@ -1,5 +1,5 @@
-# Python Microsoft Dynamic 365 Application Programming Interface
-Python Microsoft Dynamic 365 Application Programming Interface
+# Python Microsoft Dynamic 365 FrameWork
+Python Microsoft Dynamic 365 FrameWork
 
 [![Python Version](https://img.shields.io/badge/python-3.7-blue.svg)][python-version]
 

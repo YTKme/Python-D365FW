@@ -1,14 +1,14 @@
 """
-D365API
-~~~~~~~
+D365FW
+~~~~~~
 """
 
-from D365API.Access import Access
-from D365API.Entity import Entity
-from D365API.Constant import D365_API_V
+from D365FW.Access import Access
+from D365FW.Entity import Entity
+from D365FW.Constant import D365_API_V
 
-class D365API(Entity):
-    """D365API Object
+class D365FW(Entity):
+    """D365FW Object
 
     Main object for the Microsoft D365 (Dynamics 365) API (Application
     Programing Interface).

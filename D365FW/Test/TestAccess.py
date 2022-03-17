@@ -1,13 +1,13 @@
 """
-D365API.TestAccess
-~~~~~~~~~~~~~~~~~~
+D365FW.TestAccess
+~~~~~~~~~~~~~~~~~
 """
 
 import json
 import os
 import unittest
-from D365API.Access import Access
-from D365API.Constant import TEST_FILE
+from D365FW.Access import Access
+from D365FW.Constant import TEST_FILE
 
 class TestAccess(unittest.TestCase):
     """Test the Access module."""

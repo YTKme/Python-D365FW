@@ -6,7 +6,7 @@ current_directory = Path(__file__).parent
 long_description = (current_directory/'README.md').read_text()
 
 setup(
-    name = 'd365api',
+    name = 'd365fw',
     version = '0.8.0',
     packages = find_packages(),
 
@@ -18,9 +18,9 @@ setup(
     # Metadata
     author = 'Yan Kuang',
     author_email = 'YTKme@Outlook.com',
-    description = 'Microsoft Dynamics 365 Application Programming Interface.',
+    description = 'Microsoft Dynamics 365 FrameWork.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     license = 'GNU GENERAL PUBLIC LICENSE',
-    keywords = 'dynamics d365 api microsoft'
+    keywords = 'dynamics d365 fw api microsoft'
 )

@@ -1,14 +1,14 @@
 """
-D365API.TestD365API
-~~~~~~~~~~~~~~~~~~~
+D365FW.TestD365FW
+~~~~~~~~~~~~~~~~~
 """
 
 import json
 import os
 import unittest
 
-from D365API.D365API import D365API
-from D365API.Constant import TEST_FILE
+from D365FW.D365FW import D365FW
+from D365FW.Constant import TEST_FILE
 
 
 def setUpModule():
@@ -21,7 +21,7 @@ def tearDownModule():
     pass
 
 
-class TestD365APIGeneral(unittest.TestCase):
+class TestD365FWGeneral(unittest.TestCase):
     """Test."""
 
     def test_general(self):
@@ -43,15 +43,15 @@ class TestD365APIGeneral(unittest.TestCase):
         # Get the read Account failure unique identifier (ID)
         read_account_id = 'af2e07f6-fa17-ec11-b6e6-000d3a9b2012'
 
-        # Create an instance of D365API object and login
-        d365api = D365API(hostname=hostname,
-                          client_id=oauth_1_0_user_success['client_id'],
-                          client_secret=oauth_1_0_user_success['client_secret'],
-                          tenant_id=oauth_1_0_user_success['tenant_id'])
+        # Create an instance of D365FW object and login
+        d365fw = D365FW(hostname=hostname,
+                        client_id=oauth_1_0_user_success['client_id'],
+                        client_secret=oauth_1_0_user_success['client_secret'],
+                        tenant_id=oauth_1_0_user_success['tenant_id'])
 
-        print(f'Label: {d365api.accounts.label}')
+        print(f'Label: {d365fw.accounts.label}')
 
-        print(f'Account: {d365api.accounts.read(id=read_account_id)}')
+        print(f'Account: {d365fw.accounts.read(id=read_account_id)}')
 
 
 if __name__ == '__main__':

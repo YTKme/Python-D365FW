@@ -1,6 +1,6 @@
 """
 
-Microsoft Dynamic 365 Application Programming Interface
+Microsoft Dynamic 365 FrameWork
 
 """
 

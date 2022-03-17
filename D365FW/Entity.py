@@ -1,13 +1,13 @@
 """
-D365API.Entity
-~~~~~~~~~~~~~~
+D365FW.Entity
+~~~~~~~~~~~~~
 """
 
 import json
 from urllib.parse import urlencode
 import requests
 
-from D365API.Constant import D365_API_V
+from D365FW.Constant import D365_API_V
 
 class Entity(object):
     """Entity.
