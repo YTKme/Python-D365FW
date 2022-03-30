@@ -7,7 +7,7 @@ long_description = (current_directory/'README.md').read_text()
 
 setup(
     name = 'd365fw',
-    version = '0.8.1',
+    version = '0.8.2',
     packages = find_packages(),
 
     # Dependency
