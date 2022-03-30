@@ -323,8 +323,12 @@ class Entity(object):
         # query = urlencode(kwargs, safe='$,')
 
         # Build query
-        # Loop through `kwargs` parameter(s)
-        query = '&'.join(f'${key}={value}' for key, value in kwargs.items())
+        # Loop through `kwargs` parameter(s) and join them with `&`
+        # The `fetchXml` parameter does not prepend with `$`
+        query = '&'.join(f'${key}={value}'
+                         if key != 'fetchXml'
+                         else f'{key}={value}'
+                         for key, value in kwargs.items())
 
         # Create request URL
         request_url = f'{self.root_url}/{self.label}?{query}'
