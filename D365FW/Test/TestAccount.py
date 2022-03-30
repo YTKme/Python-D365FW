@@ -8,6 +8,7 @@ import os
 import uuid
 import random
 import unittest
+import urllib.parse
 import requests
 
 from D365FW.Access import Access
@@ -831,6 +832,33 @@ class TestAccountQuery(unittest.TestCase):
 
         # Test to ensure Account information is a string
         self.assertEqual(type(query_account), str)
+
+
+    def test_query_fetch_xml_account_success(self):
+        """Test as success for Account query using `fetchXml`.
+
+        Get the hostname from the Test Data to make a request for query.
+        Test for the `fetchXml` system query option. Should result in
+        response with status code 200 OK and a string formatted JSON for
+        the result of the query.
+        """
+
+        # Fetch XML query
+        fetch_xml = '<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false"> <entity name="account"> <attribute name="name" /> <attribute name="accountid" /> <order attribute="name" descending="false" /> </entity> </fetch>'
+
+        # Encode the Fetch XML query
+        encode_fetch_xml = urllib.parse.quote(fetch_xml)
+
+        # Define query property
+        query = {
+            'fetchXml': encode_fetch_xml
+        }
+
+        # Make a request to query Account using Fetch XML
+        query_account = self.entity.accounts.query(**query)
+
+        # Test to ensure Account information is a string
+        self.assertIsInstance(query_account, str)
 
 
     @classmethod
