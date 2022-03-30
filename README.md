@@ -5,8 +5,8 @@ Python Microsoft Dynamic 365 FrameWork
 
 [python-version]: https://www.python.org/
 
-The Microsoft Dynamics 365 Application Programming Interface is a basic
-REpresentational State Transfer (REST) framework. It provides 
+The Microsoft Dynamics 365 FrameWork is a basic REpresentational State
+Transfer (REST) Application Programming Interface (API). It provides 
 integration to
 [Microsoft Dataverse Web API](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/overview)
 resources.
@@ -20,27 +20,27 @@ resources.
 
 ### Installation
 
-D365API can be installed with
+D365FW can be installed with
 
 ```bash
-python -m pip install d365api
+python -m pip install d365fw
 ```
 
 or
 
 ```bash
-pip install d365api
+pip install d365fw
 ```
 
 Import the module
 
 ```python
-from D365API.D365API import D365API
+from D365FW.D365FW import D365FW
 ```
 
 ## Authentication
 
-The `D365API` framework allows user to authenticate the system using
+The `D365FW` framework allows user to authenticate the system using
 [OAuth](https://en.wikipedia.org/wiki/OAuth). It accepts a fix list of
 valid credentials to login to the system.
 
@@ -50,11 +50,11 @@ valid credentials to login to the system.
 * **tenant_id:** the tenant (directory) ID of the environment
 
 ```python
-# Create an instance of D365API object and login
-d365api = D365API(hostname=hostname,
-                  client_id=client_id,
-                  client_secret=client_secret,
-                  tenant_id=tenant_id)
+# Create an instance of D365FW object and login
+d365fw = D365fw(hostname=hostname,
+                client_id=client_id,
+                client_secret=client_secret,
+                tenant_id=tenant_id)
 ```
 
 ## Usage
@@ -71,14 +71,14 @@ payload = {
 # Make a request to create the Account
 # Get the return unique identifier (ID)
 # The payload need to be serialized to JSON formatted str (json.dumps)
-account_id = d365api.accounts.create(json.dumps(payload))
+account_id = d365fw.accounts.create(json.dumps(payload))
 ```
 
 ### Read
 
 ```python
 # Make a request to read the Account
-read_account = d365api.accounts.read(account_id)
+read_account = d365fw.accounts.read(account_id)
 ```
 
 ### Update
@@ -92,12 +92,12 @@ payload = {
 
 # Make a request to update the Account with unique identifier (ID)
 # Update the Account Name with the newly generated Account Name
-update_account = d365api.accounts.update(account_id, json.dumps(payload))
+update_account = d365fw.accounts.update(account_id, json.dumps(payload))
 ```
 
 ### Delete
 
 ```python
 # Make a request to delete the Account with unique identifier (ID)
-delete_account = d365api.accounts.delete(account_id)
+delete_account = d365fw.accounts.delete(account_id)
 ```
